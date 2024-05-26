@@ -119,8 +119,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
-
 body {
   font-family: 'Poppins', sans-serif;
   display: flex;
@@ -141,10 +139,10 @@ body {
 }
 
 .form-container {
-  background-color: #77AB59;
+  /* background-color: #0A2244; */
   padding: 20px;
   width: 40%;
-  border-radius: 10px;
+  border-radius: 25px;
   box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
 }
 
@@ -152,19 +150,21 @@ h1 {
   font-size: 50px;
   text-align: center;
   margin-bottom: 10px;
-  color: white;
+  color: #0A2244;
 }
 
 h2 {
   font-size: 16px;
   text-align: center;
   margin-bottom: 30px;
-  color: black;
+  color: #0A2244;
 }
 
 label {
+  color: #000000;
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 1px;
+  margin-top: 5px;
 }
 
 input[type="text"],
@@ -173,18 +173,31 @@ input[type="password"],
 select {
   width: 100%;
   padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
+  border: 1px solid #2F3F7A;
+  border-radius: 10px;
   outline: none;
   box-sizing: border-box;
 }
 
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+button.register-button {
+  width: auto; 
+  padding: 10px 20px; 
+}
+
 button {
-  background-color: #007bff;
-  color: #fff;
+  background-color: #0A2244;
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
-  border-radius: 3px;
+  border-radius: 10px;
   cursor: pointer;
   margin-top: 15px;
 }
@@ -194,24 +207,41 @@ button[disabled] {
   cursor: not-allowed;
 }
 
-button:hover {
-  background-color: #0056b3;
-}
-
 .success-message {
-  color: green;
+  color: #28a745; /* Green color for success */
+  background-color: #d4edda; /* Light green background */
+  border: 1px solid #c3e6cb; /* Green border */
+  padding: 10px;
+  border-radius: 10px;
   text-align: center;
   margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
 }
+
+.success-message-icon {
+  margin-right: 5px;
+}
+
 
 .error-input {
   border-color: red;
 }
 
 .error-message {
-  color: red;
+  color: #dc3545; /* Red color for error */
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #f5c6cb; /* Red border */
+  padding: 10px;
+  border-radius: 5px;
   text-align: center;
   margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.error-message-icon {
+  margin-right: 5px;
 }
 </style>
 

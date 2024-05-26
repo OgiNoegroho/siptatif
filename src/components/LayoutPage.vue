@@ -25,7 +25,7 @@ export default {
 
 /* Add any additional styles for the layout here */
 .main-content {
-  margin-top: 50px; /* Adjust this value based on your navbar's height */
+  margin-top: 20px; /* Adjust this value based on your navbar's height */
 }
 
 </style>

@@ -26,10 +26,7 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
-
 body {
-  background-color: #1b1b1b;
   font-family: 'Poppins', sans-serif;
 }
 
@@ -37,27 +34,22 @@ body {
   width: 300px;
   margin: 0 auto;
   padding: 100px;
-  background-color: #77AB59;
   border: 1px solid #ccc;
-  border-radius: 5px;
+  border-radius: 35px;
   margin-top: 150px;
 }
 
 .login-container h1{
   text-align: center;
-  margin-bottom: 20px;
-  color: white;
-}
-
-
-.login-container h5 {
-  text-align: center;
+  margin-bottom: 18px;
+  color:#0A2244;
 }
 
 .email-input {
 
   width: 90%;
   padding: 10px;
+  border-radius: 10px;
   margin: 30px 0 30px 0;
 
 }
@@ -66,16 +58,12 @@ body {
   display: block;
   width: 100%;
   padding: 10px;
-  background-color: #007BFF;
+  background-color: #2F3F57;
   color: #fff;
   text-align: center;
   text-decoration: none;
   border-radius: 5px;
   cursor: pointer;
-}
-
-.forgot-password-link:hover {
-  background-color: #0056b3;
 }
 
 .back-to-login-link {
@@ -84,5 +72,6 @@ body {
   padding: 10px;
   text-align: center;
   text-decoration: none;
+  color: #5F7A2F;
 }
 </style>

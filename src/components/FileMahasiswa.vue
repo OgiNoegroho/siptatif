@@ -1,13 +1,16 @@
 <template>
-  <div>
+  <div class="container">
     <h2>Berkas Mahasiswa</h2>
     <div v-if="selectedmahasiswa" class="detail-item">
-      <div class="mahasiswa-header">
-        <span class="detail-nama">{{ selectedmahasiswa.nama }}</span>
-      </div>
       <div class="mahasiswa-detail">
         <!-- Basic Details in Line -->
         <div class="basic-details">
+          <div class="inline-item">
+            <p class="detail-info">
+              <strong>Nama:</strong>
+              <span>{{ selectedmahasiswa.nama }}</span>
+            </p>
+          </div>
           <div class="inline-item">
             <p class="detail-info">
               <strong>NIM:</strong>
@@ -107,7 +110,7 @@ export default {
         return;
       }
       try {
-        const response = await axios.get(`/api/mahasiswa/${nim}`);
+        const response = await axios.get(`/api/pendaftaran/${nim}`);
         this.selectedmahasiswa = response.data;
         this.selectedStatus = this.selectedmahasiswa.status; // Set selectedStatus to the current status
       } catch (error) {
@@ -118,7 +121,7 @@ export default {
       if (window.confirm('Are you sure that you want to change the status?')) {
         try {
           const nim = this.selectedmahasiswa.nim;
-          await axios.put(`/api/mahasiswa/${nim}/status`, { status: this.selectedStatus });
+          await axios.put(`/api/pendaftaran/updatemahasiswa/${nim}/status`, { status: this.selectedStatus });
           this.selectedmahasiswa.status = this.selectedStatus; // Update the status locally
           // Optionally, you can reload the mahasiswa details after updating the status
           // this.fetchMahasiswaDetails();
@@ -149,14 +152,27 @@ export default {
 };
 </script>
 
-
-
 <style scoped>
-.mahasiswa-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 2px solid black;
+.container {
+  margin: 20px;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+h2 {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.detail-item {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.mahasiswa-detail {
   margin-bottom: 20px;
 }
 
@@ -184,6 +200,7 @@ export default {
   padding: 10px;
   border: 1px solid #ddd;
   background: white;
+  border-radius: 4px;
 }
 
 .basic-details, .calon-pembimbing, .berkas-catatan {
@@ -195,6 +212,7 @@ export default {
 .inline-item {
   flex: 1;
   margin-right: 20px;
+  margin-bottom: 20px;
 }
 
 .inline-item:last-child {
@@ -214,7 +232,10 @@ textarea {
   flex: 1;
   font-size: 16px;
   height: 80px;
-  width: 700px;
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .form-group {
@@ -229,6 +250,8 @@ textarea {
   font-size: 16px;
   padding: 10px;
   height: 40px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 .simpan-button {
@@ -261,7 +284,9 @@ textarea {
   color: white;
   transition: background-color 0.3s ease;
   margin-bottom: 50px;
-  margin-left: 1140px;
+  display: block;
+  width: fit-content;
+  margin: 20px auto 0;
 }
 
 .back-button:hover {

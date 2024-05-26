@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h2>Data Dosen Pembimbing</h2>
+    <h2>Data Dosen</h2>
 
-    <!-- Modal for Edit Data Dosen Pembimbing -->
+    <!-- Modal for Tambah Data Dosen -->
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <span class="close-btn" @click="closeModal">&times;</span>
-        <h3>Edit Data Dosen Pembimbing</h3>
-        <form id="formEditDosenModal" @submit.prevent="submitForm" class="form-container">
+        <h3>{{ editingIndex === null ? 'Tambah' : 'Edit' }} Data Dosen</h3>
+        <form id="formTambahDosenModal" @submit.prevent="submitForm" class="form-container">
           <div class="form-group">
             <input type="text" v-model="inputNama" placeholder="Nama Dosen" required>
           </div>
@@ -15,14 +15,20 @@
             <input type="text" v-model="inputNIP" placeholder="NIP" required>
           </div>
           <div class="form-group">
-            <button type="submit" class="btttn update-button">
-              Update Data Dosen
+            <button type="submit" class="btttn tambah-button">
+              {{ editingIndex === null ? 'Tambah' : 'Update' }} Data Dosen
             </button>
           </div>
         </form>
       </div>
     </div>
 
+    <!-- Button to open modal -->
+    <button class="btttn tambah-button" @click="openModal">
+      <i class="pi pi-plus-circle icon"></i> Tambah Data Dosen
+    </button>
+
+    <!-- Table to display dosen -->
     <table>
       <thead>
         <tr>
@@ -35,11 +41,12 @@
       <tbody>
         <tr v-for="(dosen, index) in dosenList" :key="index">
           <td>{{ index + 1 }}</td>
-          <td>{{ dosen.nama_pembimbing }}</td>
-          <td>{{ dosen.nip_pembimbing }}</td>
+          <td>{{ dosen.Nama }}</td> <!-- Display nama of the dosen -->
+          <td>{{ dosen.NIP }}</td> <!-- Display NIP of the dosen -->
           <td>
+            <!-- Buttons for edit, delete, and detail actions -->
             <button class="btttn tombol-edit" @click="editDosen(index)">Edit</button>
-            <button class="btttn tombol-delete" @click="confirmDelete(dosen.nip_pembimbing, index)">Hapus</button>
+            <button class="btttn tombol-delete" @click="confirmDelete(dosen.NIP, index)">Hapus</button>
             <button class="btttn tombol-detail" @click="showDetail(dosen)">Detail</button>
           </td>
         </tr>
@@ -64,21 +71,21 @@ export default {
   },
   methods: {
     fetchDosenList() {
-      fetch('/api/dosen/pembimbing')
+      fetch('/api/dosen/alldosen')
         .then(response => response.json())
         .then(data => {
           this.dosenList = data;
         })
         .catch(error => {
-          console.error('Error fetching dosen pembimbing list:', error);
+          console.error('Error fetching dosen list:', error);
         });
     },
     showDetail(dosen) {
-      this.$router.push({ name: 'DetailPembimbing', params: { nip_pembimbing: dosen.nip_pembimbing } });
+      this.$router.push({ name: 'Detai', params: { nip: dosen.NIP } });
     },
     confirmDelete(nip, index) {
       if (confirm("Apakah Anda yakin ingin menghapus data dosen ini?")) {
-        fetch(`/api/dosen/pembimbing/${nip}`, {
+        fetch(`/api/dosen/${nip}`, {
           method: 'DELETE'
         })
         .then(response => response.json())
@@ -92,7 +99,7 @@ export default {
           }
         })
         .catch(error => {
-          console.error('Error deleting dosen pembimbing:', error);
+          console.error('Error deleting dosen:', error);
         });
       } else {
         console.log("Penghapusan data dibatalkan");
@@ -104,10 +111,43 @@ export default {
       });
     },
     submitForm() {
-      this.updateData();
+      if (this.editingIndex === null) {
+        this.tambahData();
+      } else {
+        this.updateData();
+      }
+    },
+    tambahData() {
+      fetch('/api/dosen', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nama: this.inputNama,
+          nip: this.inputNIP
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          this.dosenList.push({
+            Nama: this.inputNama,
+            NIP: this.inputNIP
+          });
+          this.updateNoValues();
+          this.resetForm();
+          this.closeModal();
+        } else {
+          alert(data.message);
+        }
+      })
+      .catch(error => {
+        console.error('Error adding dosen:', error);
+      });
     },
     updateData() {
-      fetch(`/api/dosen/pembimbing/${this.inputNIP}`, {
+      fetch(`/api/dosen/${this.inputNIP}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
@@ -120,8 +160,8 @@ export default {
       .then(data => {
         if (data.success) {
           this.dosenList[this.editingIndex] = {
-            nama_pembimbing: this.inputNama,
-            nip_pembimbing: this.inputNIP
+            Nama: this.inputNama,
+            NIP: this.inputNIP
           };
           this.updateNoValues();
           this.resetForm();
@@ -137,8 +177,8 @@ export default {
     editDosen(index) {
       this.editingIndex = index;
       const dosen = this.dosenList[index];
-      this.inputNama = dosen.nama_pembimbing;
-      this.inputNIP = dosen.nip_pembimbing;
+      this.inputNama = dosen.Nama;
+      this.inputNIP = dosen.NIP;
       this.openModal();
     },
     openModal() {
@@ -157,6 +197,14 @@ export default {
 </script>
 
 <style scoped>
+/* Styles for the component */
+</style>
+
+
+
+
+
+<style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
 * {
@@ -168,15 +216,8 @@ export default {
 }
 
 h2 {
-  text-align: center;
-  margin-bottom: 10px;
-  text-transform: capitalize;
-}
-
-h3 {
-  text-align: center;
-  margin-bottom: 15px;
-  text-transform: capitalize;
+  margin-top: 20px;
+  margin-left: 20px;
 }
 
 table {
@@ -213,7 +254,7 @@ table tr:hover {
   margin-right: 20px;
   cursor: pointer;
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   font-size: 14px;
   text-align: center;
   text-decoration: none;
@@ -266,7 +307,7 @@ table tr:hover {
   position: relative;
   padding: 20px;
   background-color: #fefefe;
-  border-radius: 15px;
+  border-radius: 5px;
   width: 60%;
   max-width: 400px;
   display: flex;
@@ -292,13 +333,13 @@ table tr:hover {
   margin-bottom: 7px;
 }
 
-#formEditDosenModal input,
-#formEditDosenModal select {
+#formTambahDosenModal input,
+#formTambahDosenModal select {
   width: 100%;
   padding: 10px;
   margin-bottom: 10px;
   border: 1px solid #ccc;
-  border-radius: 15px;
+  border-radius: 4px;
 }
 
 .form-container > .form-group:last-child {
@@ -317,3 +358,4 @@ table tbody tr td:last-child {
   margin: 0 5px;
 }
 </style>
+

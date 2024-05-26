@@ -26,11 +26,14 @@ export default {
 </script>
 
 <style>
+*{
+  font-family: 'Poppins', sans-serif;
+}
 .dashboard-container {
   max-width: 1200px;
   margin: 50px auto;
   padding: 20px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 100px rgba(17, 42, 154, 0.1);
 }
 
 .welcome-text h1 {
@@ -40,14 +43,14 @@ export default {
 }
 
 .welcome-text p {
-  font-size: 1em;
+  font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 20px;
   color: #666;
 }
 
 .purpose-container h2 {
-  font-size: 2em;
+  font-size: 1.6rem;
   margin-bottom: 20px;
   color: #333;
 }

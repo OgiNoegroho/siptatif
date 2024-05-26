@@ -11,10 +11,11 @@ import LoginPage from '@/components/LoginPage.vue';
 import ForgotPassword from '@/components/ForgotPassword.vue';
 import MahasiswaPage from '@/components/MahasiswaPage.vue';
 import RegistrationPage from '@/components/RegistrationPage.vue';
+import DosenPage from '@/components/DosenPage.vue';
 
 const routes = [
   {
-    path: '/Login',
+    path: '/',
     name: 'Login',
     component: LoginPage
   },
@@ -34,7 +35,7 @@ const routes = [
     component: LayoutPage,
     children: [
       {
-        path: '/',
+        path: '/Home',
         name: 'Home',
         component: HomePage
       },
@@ -42,6 +43,11 @@ const routes = [
         path: '/profile',
         name: 'profile',
         component: ProfilePage 
+      },
+      {
+        path: '/dosen',
+        name: 'DosenPagee',
+        component: DosenPage 
       },
       {
         path: '/dosen-pembimbing',

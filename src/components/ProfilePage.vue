@@ -50,6 +50,9 @@ export default {
 </script>
 
 <style scoped>
+*{
+  font-family: 'Poppins', sans-serif;
+}
 .container {
   background-color: #fff;
   padding: 30px;

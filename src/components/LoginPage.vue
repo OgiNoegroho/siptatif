@@ -128,12 +128,12 @@ h2 {
 }
 
 .form-container {
-  background-color: #77AB59;
+  background-color: #0A2244;
   padding: 30px;
   width: 40%; /* Adjust width */
   max-width: 500px; /* Add max-width */
   border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
   margin-right: 50px; /* Add some margin to the left */
 }
 
@@ -146,6 +146,7 @@ h2 {
 }
 
 label {
+  color: #ffffff;
   display: block;
   margin-top: 5px;
   margin-bottom: 5px;
@@ -154,7 +155,7 @@ label {
 input[type="email"], input[type="password"] {
   width: 100%;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #ffffff;
   border-radius: 10px;
   outline: none;
   box-sizing: border-box;
@@ -162,7 +163,7 @@ input[type="email"], input[type="password"] {
 }
 
 button {
-  background-color: #36802D;
+  background-color: #E6B861;
   color: #000000;
   border: none;
   padding: 10px 20px;
@@ -174,62 +175,67 @@ button {
   font-size: 16px;
 }
 
-button:hover {
-  background-color: #234D20;
-}
-
 a {
-  color: #007bff;
+  color: #ffffff;
   text-decoration: none;
-  margin-left: 10px;
+  transition: color 0.3s, transform 0.3s; /* Add smooth transition */
 }
 
 a:hover {
-  text-decoration: underline;
+  color: #ffffff; 
+  transform: scale(1.20); 
 }
 
 .forgot-password {
   display: block;
-  text-align: right;
+  text-align: center;
   font-size: small;
   margin-top: 5px;
 }
 
 .button-container {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   font-weight: bold;
-  margin-top: 15px;
+  margin-top: 5px;
+}
+
+button.register-button {
+  width: auto; 
+  padding: 10px 20px; 
 }
 
 .register-button {
-  background-color: #36802D;
-  color: #000;
-  padding: 10px 20px;
-  border-radius: 10px;
+  margin-left: 10px;
+  display: block;
+  text-align: center;
+  font-size: small;
   margin-top: 15px;
-  text-decoration: none;
-  font-weight: bold;
-  width: 100%;
-  box-sizing: border-box;
-  font-size: 16px;
-}
-
-.register-button:hover {
-  background-color: #234D20;
 }
 
 .success-message {
-  color: white;
+  color: #28a745; /* Green color for success */
+  background-color: #d4edda; /* Light green background */
+  border: 1px solid #c3e6cb; /* Green border */
+  padding: 10px;
+  border-radius: 5px;
   text-align: center;
   margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 .error-message {
-  color: red;
+  color: #dc3545; /* Red color for error */
+  background-color: #f8d7da; /* Light red background */
+  border: 1px solid #f5c6cb; /* Red border */
+  padding: 10px;
+  border-radius: 5px;
   text-align: center;
   margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
 }
 
 </style>

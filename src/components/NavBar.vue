@@ -11,46 +11,52 @@
       </div>
       <br>
       <ul>
-      <li @click="handleMainMenuItemClick('/home')" :class="{ 'active': currentRoute === '/home' && activeDropdown !== 'dosen' }">
-        <div class="menu-item">
-          <i class="pi pi-home"></i>
-          <router-link to="/home">Beranda</router-link>
-        </div>
-      </li>
-      <li @click="handleMainMenuItemClick('/mahasiswa')" :class="{ 'active': currentRoute === '/mahasiswa' && activeDropdown !== 'dosen' }">
-        <div class="menu-item">
-          <i class="pi pi-user"></i>
-          <router-link to="/mahasiswa">Mahasiswa</router-link>
-        </div>
-      </li>
-      <li @click="toggleDropdown('dosen')" :class="{ 'active-dropdown': activeDropdown === 'dosen' }">
-        <div class="menu-item">
-          <i class="pi pi-users"></i>
-          <a href="#" :class="{ 'active': activeDropdown === 'dosen' }" class="feat-btn">
-            Dosen
-            <i :class="activeDropdown === 'dosen' ? 'pi pi-sort-up-fill' : 'pi pi-sort-down-fill'"></i>
-          </a>
-        </div>
-        <ul class="feat-show" v-if="activeDropdown === 'dosen'">
-          <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen-pembimbing' }"><router-link to="/dosen-pembimbing">Pembimbing</router-link></li>
-          <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen-penguji' }"><router-link to="/dosen-penguji">Penguji</router-link></li>
-        </ul>
-      </li>
-    </ul>
-  </nav>
+        <li @click="handleMainMenuItemClick('/home')" :class="{ 'active': currentRoute === '/home' && activeDropdown !== 'dosen' }">
+          <div class="menu-item">
+            <i class="pi pi-home"></i>
+            <router-link to="/home">Beranda</router-link>
+          </div>
+        </li>
+        <li @click="handleMainMenuItemClick('/mahasiswa')" :class="{ 'active': currentRoute === '/mahasiswa' && activeDropdown !== 'dosen' }">
+          <div class="menu-item">
+            <i class="pi pi-user"></i>
+            <router-link to="/mahasiswa">Mahasiswa</router-link>
+          </div>
+        </li>
 
-  <nav class="navbar">
-  <div class="koordinator-text">
-    Koordinator TA
-  </div>
-  <div class="dropdown" @mouseleave="hideDropdown">
-    <img src="@/assets/images/me2.jpg" alt="Profile" class="profile-pic" @click="toggleProfileDropdown" />
-    <div class="dropdown-content" v-if="showProfileDropdown">
-      <router-link to="/profile" class="profile-option">Profile</router-link>
-      <a @click="logout" class="profile-option">Logout</a>
-    </div>
-  </div>
-</nav>
+        <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen' }">
+          <div class="menu-item" @click="toggleDropdown('dosen')">
+            <i class="pi pi-users"></i>
+            <router-link to="/dosen" :class="{ 'active': activeDropdown === 'dosen' }" class="feat-btn">
+              Dosen
+              <i :class="activeDropdown === 'dosen' ? 'pi pi-sort-up-fill' : 'pi pi-sort-down-fill'"></i>
+            </router-link>
+          </div>
+
+          <ul class="feat-show" v-if="activeDropdown === 'dosen'">
+            <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen-pembimbing' }">
+              <router-link to="/dosen-pembimbing">Pembimbing</router-link>
+            </li>
+            <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen-penguji' }">
+              <router-link to="/dosen-penguji">Penguji</router-link>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+
+    <nav class="navbar">
+      <div class="koordinator-text">
+        Koordinator TA
+      </div>
+      <div class="dropdown" @mouseleave="hideDropdown">
+        <img src="@/assets/images/me2.jpg" alt="Profile" class="profile-pic" @click="toggleProfileDropdown" />
+        <div class="dropdown-content" v-if="showProfileDropdown">
+          <router-link to="/profile" class="profile-option">Profile</router-link>
+          <a @click="logout" class="profile-option">Logout</a>
+        </div>
+      </div>
+    </nav>
 
     <!-- Logout Confirmation Modal -->
     <div v-if="showLogoutConfirmation" class="logout-modal">
@@ -85,6 +91,8 @@ export default {
     activeDropdown(newValue) {
       if (newValue === 'dosen') {
         this.isDosenDropdownOpen = true;
+        // Directly navigate to DosenPage when the Dosen dropdown is clicked
+        this.$router.push('/dosen');
       } else {
         this.isDosenDropdownOpen = false;
       }
@@ -140,8 +148,6 @@ export default {
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
-
 * {
   margin: 0;
   padding: 0;
@@ -159,9 +165,9 @@ export default {
 }
 
 .siptatif-logo {
-  height: 30px;
+  height: 50px;
   margin-right: 10px;
-  margin-top: 30px;
+  margin-top: 20px;
 }
 
 .btn {
@@ -194,7 +200,7 @@ export default {
   width: 250px;
   height: 100%;
   left: -250px;
-  background: #234D20 ;
+  background: #2F3F57;
   transition: left 0.4s ease;
 }
 
@@ -213,7 +219,7 @@ export default {
 }
 
 nav ul {
-  background: #234D20 ;
+  background: #2F3F57;
   height: 100%;
   width: 100%;
   list-style: none;
@@ -241,19 +247,19 @@ nav ul li a {
 }
 
 nav ul li.active a {
-  color: #77AB59;
-  background: #234D20 ;
-  border-left-color: #77AB59;
+  color: #E6B861;
+
+  border-left-color: #E6B861;
 }
 
 nav ul li a:hover {
-  background: #234D20 ;
+  background: #E6B861;
 }
 
 nav ul li.active-dropdown a {
-  color: #77AB59;
-  background: #234D20 ;
-  border-left-color: #77AB59;
+  color: #E6B861;
+
+  border-left-color: #E6B861;
 }
 
 .dropdown {
@@ -261,42 +267,30 @@ nav ul li.active-dropdown a {
   overflow: hidden;
 }
 
-.dropbtn {
-  bottom: 200px;
-  font-size: 16px;
-  border: none;
-  outline: none;
-  color: white;
-  background-color: inherit;
-  margin: 0;
-  padding: 14px 16px;
-}
-
+/* Navbar at the top */
 .navbar {
   width: 100%;
-  overflow: hidden;
-  background-color: #234D20;
-  padding: 8px;
+  background-color: #2F3F57;
+  padding: 8px 20px;
   height: 65px;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
 }
 
 .koordinator-text {
   color: white;
   font-size: 16px;
-  margin-left: 1100px;
+  margin-right: 20px;
 }
 
 .profile-pic {
+  margin-top: 8px;
   border-radius: 50%;
   height: 40px;
   width: 40px;
-  margin-top: 5px;
   cursor: pointer;
 }
-
 
 .dropdown-content {
   display: none;
@@ -305,8 +299,8 @@ nav ul li.active-dropdown a {
   border: 1px solid black;
   min-width: 160px;
   z-index: 1;
-  top: 50px;
-  right: 10px;
+  top: 45px;
+  right: 0;
   border-radius: 5px;
 }
 
@@ -374,11 +368,11 @@ nav ul li i {
 
 nav ul li.active i,
 nav ul li.active a {
-  color: rgb(119, 171, 89);
+  color: rgb(211, 186, 26);
 }
 
 nav ul li.active-dropdown i,
 nav ul li.active-dropdown a {
-  color: #77AB59;
+  color: #E6B861;
 }
 </style>
