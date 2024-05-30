@@ -6,24 +6,23 @@
       <h2>Sistem Informasi Pendaftaran Tugas Akhir Mahasiswa Teknik Informatika</h2>
     </div>
     <div class="form-container">
-      <h1>Log In</h1>
+      <h1>Login</h1>
       <form @submit.prevent="login">
         <label for="email">Masukkan Email Anda</label>
-        <input type="email" v-model="email" id="email" required>
+        <input type="email" v-model="loginData.email" id="email" required>
         <br>
         <label for="password">Password</label>
-        <input type="password" v-model="password" id="password" required>
-        <a href="/forgot-password" class="forgot-password">Forgot Password?</a>
+        <input type="password" v-model="loginData.password" id="password" required>
+        <router-link to="/forgot-password" class="forgot-password">Forgot Password?</router-link>
         <div class="button-container">
-          <button :disabled="isLoading" type="submit" class="register-button">
+          <button :disabled="isLoading" type="submit">
             <span v-if="isLoading">Loading...</span>
             <span v-else>Login</span>
           </button>
-          <a href="/registration" class="register-button">Buat Akun</a>
+          <router-link to="/registration" class="register-button">Buat Akun</router-link>
         </div>
       </form>
-      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
-      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+      <p v-if="loginMessage" class="error-message">{{ loginMessage }}</p>
     </div>
   </div>
 </template>
@@ -32,46 +31,49 @@
 export default {
   data() {
     return {
-      email: '',
-      password: '',
+      loginData: {
+        email: '',
+        password: ''
+      },
       isLoading: false,
-      successMessage: '',
-      errorMessage: ''
+      loginMessage: ''
     };
   },
-  computed: {
-    registeredUsers() {
-      return this.$store.getters.getRegisteredUsers;
-    }
-  },
   methods: {
-    async login() {
+    login() {
       this.isLoading = true;
-      const user = this.registeredUsers.find(user => 
-        user.email === this.email && user.password === this.password
-      );
-
-      if (user) {
-        const userData = {
-          email: user.email,
-        };
-        try {
-          await this.$store.dispatch('loginUser', userData);
-          this.successMessage = 'Login berhasil!';
-          this.$router.push({ name: 'Home' }); 
-        } catch (error) {
-          this.errorMessage = 'Terjadi kesalahan saat login.';
-        } finally {
-          this.isLoading = false;
+      fetch('/api/user/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(this.loginData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.token) {
+          localStorage.setItem('token', data.token);
+          // Redirect or handle successful login
+          this.$router.push('/Home'); // example redirect
+        } else {
+          this.loginMessage = data.message;
         }
-      } else {
-        this.errorMessage = 'Email atau password salah';
         this.isLoading = false;
-      }
+      })
+      .catch(error => {
+        console.error('Error logging in:', error);
+        this.loginMessage = 'An error occurred while logging in.';
+        this.isLoading = false;
+      });
     }
   }
-}
+};
 </script>
+
+<style scoped>
+/* Paste your CSS styles here */
+</style>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');

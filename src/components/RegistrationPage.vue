@@ -1,123 +1,62 @@
 <template>
   <div class="container">
-    <div class="form-container">
-      <h1>Sign Up</h1>
-      <h2>Untuk Membuat Akun, Silahkan Isi Data berikut</h2>
-      <form @submit.prevent="register">
-        <!-- Form fields -->
-        <label for="name">Masukkan Nama Anda</label>
-        <input type="text" v-model="name" id="name" required>
-        <br>
-        <label for="nim">NIM/NIS</label>
-        <input type="text" v-model="nim" id="nim" required>
-        <br>
-        <label for="umur">Umur</label>
-        <input type="number" v-model="umur" id="umur" required>
-        <br>
-        <label for="tempatTanggalLahir">Tempat/Tanggal Lahir</label>
-        <input type="text" v-model="tempatTanggalLahir" id="tempatTanggalLahir" required>
-        <br>
-        <label for="alamat">Alamat</label>
-        <input type="text" v-model="alamat" id="alamat" required>
-        <br>
-        <label for="jenisKelamin">Jenis Kelamin</label>
-        <select v-model="jenisKelamin" id="jenisKelamin" required>
-          <option value="Laki-laki">Laki-laki</option>
-          <option value="Perempuan">Perempuan</option>
-        </select>
-        <br>
-        <label for="email">Masukkan Email Anda</label>
-        <input type="email" v-model="email" id="email" required>
-        <br>
-        <label for="password">Password Anda</label>
+    <h2>Register</h2>
+    <form @submit.prevent="register">
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" v-model="email" required>
+      </div>
+      <div>
+        <label for="password">Password:</label>
         <input 
           type="password" 
-          v-model="password" 
           id="password" 
+          v-model="password" 
           :class="{ 'error-input': isPasswordMismatch }"
           required
         >
-        <br>
-        <label for="confirm-password">Konfirmasi Ulang Password Anda</label>
-        <input 
-          type="password" 
-          v-model="confirmPassword" 
-          id="confirm-password" 
-          :class="{ 'error-input': isPasswordMismatch }"
-          required
-        >
-        <br>
-        <button :disabled="isLoading" type="submit">
-          <span v-if="isLoading">Loading...</span>
-          <span v-else>Buat Akun</span>
-        </button>
-      </form>
-      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
-      <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
-      <p v-if="isPasswordMismatch" class="error-message">Password dan konfirmasi password tidak cocok</p>
-    </div>
+      </div>
+      <button type="submit">Register</button>
+    </form>
+    <p v-if="registerMessage" class="message">{{ registerMessage }}</p>
   </div>
 </template>
-
 
 <script>
 export default {
   data() {
     return {
-      name: '',
-      nim: '',
-      umur: '',
-      tempatTanggalLahir: '',
-      alamat: '',
-      jenisKelamin: '',
       email: '',
       password: '',
-      confirmPassword: '',
-      isLoading: false,
-      successMessage: '',
-      errorMessage: '',
-      isPasswordMismatch: false
+      registerMessage: ''
     };
   },
   methods: {
-    async register() {
-      if (this.password !== this.confirmPassword) {
-        this.isPasswordMismatch = true;
-        this.errorMessage = 'Password dan konfirmasi password tidak cocok';
-        return;
-      }
-
-      this.isLoading = true;
-
-      const userData = {
-        name: this.name,
-        nim: this.nim,
-        umur: this.umur,
-        tempatTanggalLahir: this.tempatTanggalLahir,
-        alamat: this.alamat,
-        jenisKelamin: this.jenisKelamin,
+    register() {
+      const registerData = {
         email: this.email,
         password: this.password
       };
 
-      try {
-        await this.$store.dispatch('registerUser', userData);
-        
-        this.successMessage = 'Akun berhasil dibuat! Anda akan diarahkan ke halaman login...';
-
-        setTimeout(() => {
-          this.$router.push({ name: 'Login' });
-        }, 3000);
-      } catch (error) {
-        this.errorMessage = 'Terjadi kesalahan saat membuat akun. Silakan coba lagi.';
-      } finally {
-        this.isLoading = false;
-      }
+      fetch('/api/user/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(registerData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        this.registerMessage = data.message;
+      })
+      .catch(error => {
+        console.error('Error registering:', error);
+        this.registerMessage = 'An error occurred while registering.';
+      });
     }
   }
-}
+};
 </script>
-
 <style scoped>
 body {
   font-family: 'Poppins', sans-serif;

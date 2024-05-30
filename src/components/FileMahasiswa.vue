@@ -121,7 +121,7 @@ export default {
       if (window.confirm('Are you sure that you want to change the status?')) {
         try {
           const nim = this.selectedmahasiswa.nim;
-          await axios.put(`/api/pendaftaran/updatemahasiswa/${nim}/status`, { status: this.selectedStatus });
+          await axios.put(`/api/pendaftaran/${nim}/status`, { status: this.selectedStatus });
           this.selectedmahasiswa.status = this.selectedStatus; // Update the status locally
           // Optionally, you can reload the mahasiswa details after updating the status
           // this.fetchMahasiswaDetails();

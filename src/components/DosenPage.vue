@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     fetchDosenList() {
-      fetch('/api/dosen/alldosen')
+      fetch('/api/dosen')
         .then(response => response.json())
         .then(data => {
           this.dosenList = data;

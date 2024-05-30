@@ -12,10 +12,10 @@
             <input type="text" v-model="inputTanggal" placeholder="Tanggal">
           </div>
           <div class="form-group">
-            <input type="text" v-model="inputNama" placeholder="Nama">
-          </div>
-          <div class="form-group">
-            <input type="text" v-model="inputNIM" placeholder="NIM">
+            <!-- Combined field for Nama dan NIM -->
+            <select v-model="selectedMahasiswa" id="mahasiswa">
+              <option v-for="mahasiswa in mahasiswaOptions" :key="mahasiswa.nim">{{ mahasiswa.nama_mahasiswa }} - {{ mahasiswa.nim_mahasiswa }}</option>
+            </select>
           </div>
           <div class="form-group">
             <input type="text" v-model="inputEmail" placeholder="Email">
@@ -26,13 +26,13 @@
           <div class="form-group">
             <label for="calonPembimbing1">Calon Pembimbing 1:</label>
             <select v-model="inputCalonPembimbing1" id="calonPembimbing1">
-              <option v-for="dosen in availableDosenList1" :key="dosen.nidn" :value="dosen.nama">{{ dosen.nama_dosen }}</option>
+              <option v-for="dosen in availableDosenList1" :key="dosen.nip" :value="dosen.nip">{{ dosen.nama_dosen }}</option>
             </select>
           </div>
           <div class="form-group">
             <label for="calonPembimbing2">Calon Pembimbing 2:</label>
             <select v-model="inputCalonPembimbing2" id="calonPembimbing2">
-              <option v-for="dosen in availableDosenList2" :key="dosen.nidn" :value="dosen.nama">{{ dosen.nama_dosen }}</option>
+              <option v-for="dosen in availableDosenList2" :key="dosen.nip" :value="dosen.nip">{{ dosen.nama_dosen }}</option>
             </select>
           </div>
           <div class="form-group">
@@ -43,6 +43,12 @@
               <option value="Penelitian">Penelitian</option>
               <option value="Proyek Desain">Proyek Desain</option>
               <option value="Pengembangan Produk">Pengembangan Produk</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <select id="jenisTA" v-model="inputJenisTA">
+              <option value="Laporan">Laporan</option>
+              <option value="Paper">Paper</option>
             </select>
           </div>
           <div class="form-group">
@@ -105,15 +111,16 @@ export default {
   data() {
     return {
       mahasiswaList: [],
+      mahasiswaOptions: [], // Array to hold mahasiswa options
       showModal: false,
       inputTanggal: '',
-      inputNama: '',
-      inputNIM: '',
+      selectedMahasiswa: '', // Updated to hold selected mahasiswa
       inputEmail: '',
       inputJudul: '',
       inputCalonPembimbing1: '',
       inputCalonPembimbing2: '',
       inputKategoriTA: '',
+      inputJenisTA: '',
       availableDosenList1: [],
       availableDosenList2: [],
       selectedFile: null
@@ -122,25 +129,32 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('/api/pendaftaran/');
+        const response = await axios.get('/api/pendaftaran');
         this.mahasiswaList = response.data;
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     },
+    async fetchMahasiswaOptions() { // Fetch mahasiswa options from endpoint
+      try {
+        const response = await axios.get('/api/mahasiswa/nim');
+        this.mahasiswaOptions = response.data;
+      } catch (error) {
+        console.error('Error fetching mahasiswa options:', error);
+      }
+    },
     async fetchDosen() {
-  try {
-    const response = await axios.get('/api/pendaftaran/dosen');
-    const dosenList = response.data.dosenList;
+      try {
+        const response = await axios.get('/api/dosen/mahasiswapdosen');
+        const dosenList = response.data.dosenList;
 
-    // Filter out the Dosen who are already chosen as Pembimbing 1 or Pembimbing 2
-    this.availableDosenList1 = dosenList.filter(dosen => dosen.NIP !== this.inputCalonPembimbing2);
-    this.availableDosenList2 = dosenList.filter(dosen => dosen.NIP !== this.inputCalonPembimbing1);
-  } catch (error) {
-    console.error('Error fetching dosen data:', error);
-  }
-},
-
+        // Filter out the Dosen who are already chosen as Pembimbing 1 or Pembimbing 2
+        this.availableDosenList1 = dosenList.filter(dosen => dosen.nip !== this.inputCalonPembimbing2);
+        this.availableDosenList2 = dosenList.filter(dosen => dosen.nip !== this.inputCalonPembimbing1);
+      } catch (error) {
+        console.error('Error fetching dosen data:', error);
+      }
+    },
     showDetail(mahasiswa) {
       this.$router.push({ name: 'FileMahasiswa', params: { nim: mahasiswa.nim } });
     },
@@ -170,30 +184,36 @@ export default {
     },
     resetForm() {
       this.inputTanggal = '';
-      this.inputNama = '';
-      this.inputNIM = '';
+      this.selectedMahasiswa = ''; // Reset selectedMahasiswa
       this.inputEmail = '';
       this.inputJudul = '';
       this.inputCalonPembimbing1 = '';
       this.inputCalonPembimbing2 = '';
       this.inputKategoriTA = '';
+      this.inputJenisTA = '';
       this.selectedFile = null;
     },
     onFileChange(event) {
       this.selectedFile = event.target.files[0];
     },
+    generateIdPendaftaran() {
+      // Generate a unique ID for the pendaftaran. This is just a simple example.
+      return 'P' + new Date().getTime();
+    },
     async tambahData() {
-      // Add your logic to send data to the server here
-      // Example using axios to post data
+      const selectedMahasiswaData = this.selectedMahasiswa.split(' - '); // Split selected mahasiswa to extract Nama and NIM
       const formData = new FormData();
+      formData.append('id_pendaftaran', this.generateIdPendaftaran());
       formData.append('tanggal', this.inputTanggal);
-      formData.append('nama', this.inputNama);
-      formData.append('nim', this.inputNIM);
+      formData.append('nama', selectedMahasiswaData[0]); // Extracted Nama
+      formData.append('nim', selectedMahasiswaData[1]); // Extracted NIM
       formData.append('email', this.inputEmail);
       formData.append('judul', this.inputJudul);
-      formData.append('calonPembimbing1', this.inputCalonPembimbing1);
-      formData.append('calonPembimbing2', this.inputCalonPembimbing2);
+      formData.append('nip_pembimbing1', this.inputCalonPembimbing1);
+      formData.append('nip_pembimbing2', this.inputCalonPembimbing2);
       formData.append('kategoriTA', this.inputKategoriTA);
+      formData.append('jenisTA', this.inputJenisTA);
+      formData.append('status', 'menunggu');
       if (this.selectedFile) {
         formData.append('berkas', this.selectedFile);
       }
@@ -214,9 +234,13 @@ export default {
   mounted() {
     this.fetchData();
     this.fetchDosen();
+    this.fetchMahasiswaOptions(); // Call fetchMahasiswaOptions on mount
   }
 };
 </script>
+
+
+
 
 <style scoped>
 /* Global styles */
