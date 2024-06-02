@@ -40,7 +40,7 @@ export default {
     async fetchDosenDetail() {
       try {
         const nipPembimbing = this.$route.params.nip_pembimbing;
-        const response = await axios.get(`/api/dosen/pembimbing/${nipPembimbing}`);
+        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/dosen/pembimbing/${nipPembimbing}`);
         this.dosen = response.data.dosen || null;
         this.mahasiswaList = response.data.mahasiswaList || [];
       } catch (error) {

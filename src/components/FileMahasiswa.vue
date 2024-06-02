@@ -110,7 +110,7 @@ export default {
         return;
       }
       try {
-        const response = await axios.get(`/api/pendaftaran/${nim}`);
+        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}`);
         this.selectedmahasiswa = response.data;
         this.selectedStatus = this.selectedmahasiswa.status; // Set selectedStatus to the current status
       } catch (error) {

@@ -71,7 +71,7 @@ export default {
   },
   methods: {
     fetchDosenList() {
-      fetch('/api/dosen')
+      fetch('https://express-mysql-virid.vercel.app/api/dosen')
         .then(response => response.json())
         .then(data => {
           this.dosenList = data;
@@ -85,7 +85,7 @@ export default {
     },
     confirmDelete(nip, index) {
       if (confirm("Apakah Anda yakin ingin menghapus data dosen ini?")) {
-        fetch(`/api/dosen/${nip}`, {
+        fetch(`https://express-mysql-virid.vercel.app/api/dosen/${nip}`, {
           method: 'DELETE'
         })
         .then(response => response.json())
@@ -118,7 +118,7 @@ export default {
       }
     },
     tambahData() {
-      fetch('/api/dosen', {
+      fetch('https://express-mysql-virid.vercel.app/api/dosen', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -147,7 +147,7 @@ export default {
       });
     },
     updateData() {
-      fetch(`/api/dosen/${this.inputNIP}`, {
+      fetch(`https://express-mysql-virid.vercel.app/api/dosen/${this.inputNIP}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

@@ -8,7 +8,7 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3001', // Proxy API requests to your Express server
+        target: 'https://express-mysql-virid.vercel.app', // Proxy API requests to your Express server
         changeOrigin: true,
       },
     },

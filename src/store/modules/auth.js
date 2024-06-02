@@ -11,7 +11,7 @@ export default {
   actions: {
     login({ commit }, userData) {
       return new Promise((resolve, reject) => {
-        axios.post('/api/user/login', userData)
+        axios.post('https://express-mysql-virid.vercel.app/api/user/login', userData)
           .then(response => {
             const token = response.data.token;
             commit('setToken', token);
@@ -24,7 +24,7 @@ export default {
     },
     register(_, userData) { // <-- Removed unused 'commit' parameter
       return new Promise((resolve, reject) => {
-        axios.post('/api/user/register', userData)
+        axios.post('https://express-mysql-virid.vercel.app/api/user/register', userData)
           .then(() => {
             resolve();
           })

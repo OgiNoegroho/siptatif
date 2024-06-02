@@ -42,7 +42,7 @@ export default {
   methods: {
     login() {
       this.isLoading = true;
-      fetch('/api/user/login', {
+      fetch('https://express-mysql-virid.vercel.app/api/user/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

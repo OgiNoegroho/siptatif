@@ -40,7 +40,7 @@ export default {
     async fetchDosenDetail() {
       try {
         const nippenguji = this.$route.params.nip_penguji;
-        const response = await axios.get(`/api/dosen/penguji/${nippenguji}`);
+        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/dosen/penguji/${nippenguji}`);
         this.dosen = response.data.dosen || null;
         this.mahasiswaList = response.data.mahasiswaList || [];
       } catch (error) {

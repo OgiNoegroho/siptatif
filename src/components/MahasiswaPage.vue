@@ -129,7 +129,7 @@ export default {
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('/api/pendaftaran');
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/pendaftaran');
         this.mahasiswaList = response.data;
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -137,7 +137,7 @@ export default {
     },
     async fetchMahasiswaOptions() { // Fetch mahasiswa options from endpoint
       try {
-        const response = await axios.get('/api/mahasiswa/nim');
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/mahasiswa/nim');
         this.mahasiswaOptions = response.data;
       } catch (error) {
         console.error('Error fetching mahasiswa options:', error);
@@ -145,7 +145,7 @@ export default {
     },
     async fetchDosen() {
       try {
-        const response = await axios.get('/api/dosen/mahasiswapdosen');
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen/mahasiswapdosen');
         const dosenList = response.data.dosenList;
 
         // Filter out the Dosen who are already chosen as Pembimbing 1 or Pembimbing 2
@@ -162,7 +162,7 @@ export default {
       if (confirm("Apakah Anda yakin ingin menghapus data mahasiswa ini?")) {
         try {
           // Send request to delete data
-          await axios.delete(`/api/pendaftaran/${mahasiswa.nim}`);
+          await axios.delete(`https://express-mysql-virid.vercel.app/api/pendaftaran/${mahasiswa.nim}`);
           // Remove deleted mahasiswa from mahasiswaList
           const index = this.mahasiswaList.findIndex(item => item.nim === mahasiswa.nim);
           if (index !== -1) {
@@ -219,7 +219,7 @@ export default {
       }
 
       try {
-        const response = await axios.post('/api/pendaftaran', formData, {
+        const response = await axios.post('https://express-mysql-virid.vercel.app/api/pendaftaran', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }

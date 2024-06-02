@@ -38,7 +38,7 @@ export default {
         password: this.password
       };
 
-      fetch('/api/user/register', {
+      fetch('https://express-mysql-virid.vercel.app/api/user/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
