@@ -3,12 +3,10 @@
     <h2>User Profile</h2>
     <div v-if="profile" class="profile-content">
       <div class="profile-pic-container">
-        <img :src="profile.profile_pic" alt="Profile Picture" class="profile-pic" @click="showEditPicture = true" />
-        <div v-if="showEditPicture" class="edit-picture">
-          <input type="file" @change="updateProfilePicture" accept="image/*" class="file-input" />
-          <button class="edit-button" @click="showEditPicture = false">Cancel</button>
-        </div>
+        <img :src="profile.profile_pic" alt="Profile Picture" class="profile-pic" />
       </div>
+      <input type="file" ref="fileInput" @change="updateProfilePicture" accept="image/*" class="file-input" />
+
       <div class="profile-details">
         <div><label>Name:</label><span>{{ profile.name }}</span></div>
         <div><label>NIP:</label><span>{{ profile.nip }}</span></div>
@@ -18,7 +16,9 @@
         <div><label>Address:</label><span>{{ profile.address }}</span></div>
         <div><label>Gender:</label><span>{{ profile.gender }}</span></div>
       </div>
+
       <div class="button-container">
+        <button class="edit-button" @click="triggerFileInput">Change Profile Picture</button>
         <button class="edit-button" @click="enterEditMode">Edit Profile</button>
       </div>
     </div>
@@ -59,6 +59,7 @@
           <select v-model="form.gender">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
+            <option value="Other">Other</option>
           </select>
         </div>
         <div class="button-container">
@@ -76,6 +77,7 @@
     </div>
   </div>
 </template>
+
 <script>
 import axios from 'axios';
 
@@ -121,14 +123,14 @@ export default {
       const formData = new FormData();
       formData.append('profile_pic', file);
 
-      axios.post('https://express-mysql-virid.vercel.app/api/user/profile/picture', formData, {
+      axios.put('https://express-mysql-virid.vercel.app/api/user/profile/picture', formData, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
           'Content-Type': 'multipart/form-data'
         }
       })
       .then(response => {
-        this.profile.profile_pic = response.data.profile_pic;
+        this.profile.profile_pic = response.data.profilePic.profile_pic; // Use correct response data structure
         this.showEditPicture = false;
         this.showMessage('Profile picture updated successfully.', true);
       })
@@ -136,6 +138,9 @@ export default {
         console.error('Error updating profile picture:', error);
         this.showMessage('Error updating profile picture.', false);
       });
+    },
+    triggerFileInput() {
+      this.$refs.fileInput.click();
     },
     enterEditMode() {
       this.form = { ...this.profile }; // Clone the profile data into the form
@@ -200,23 +205,13 @@ export default {
 .profile-pic {
   width: 100%; /* Ensure profile picture covers the whole container */
   height: 100%; /* Ensure profile picture covers the whole container */
+  margin-top: 50%;
   object-fit: cover;
   cursor: pointer;
 }
 
-.edit-picture {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: rgba(255, 255, 255, 0.9);
-  padding: 10px;
-  border-radius: 10px;
-  width: 100%; /* Ensure overlay covers the whole container */
-  height: 100%; /* Ensure overlay covers the whole container */
+.file-input {
+  display: none; /* Hide file input */
 }
 
 .profile-details {
@@ -238,13 +233,10 @@ export default {
   margin-left: 10px;
 }
 
-.file-input {
-  margin-bottom: 10px;
-}
-
 .button-container {
   display: flex;
   gap: 10px;
+  margin-top: 20px; /* Add margin-top for spacing */
 }
 
 .edit-button {

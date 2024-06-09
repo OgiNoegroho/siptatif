@@ -50,7 +50,7 @@ export default {
         });
     },
     showDetail(dosen) {
-      this.$router.push({ name: 'Detailpenguji', params: { nip_penguji: dosen.nip_penguji } });
+      this.$router.push({ name: 'DetailPenguji', params: { nip_penguji: dosen.nip_penguji } });
     }
   }
 }
