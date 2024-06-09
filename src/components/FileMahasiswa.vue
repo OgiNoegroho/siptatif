@@ -1,89 +1,127 @@
 <template>
   <div class="container">
-    <h2>Berkas Mahasiswa</h2>
-    <div v-if="selectedmahasiswa" class="detail-item">
-      <div class="mahasiswa-detail">
-        <!-- Basic Details in Line -->
-        <div class="basic-details">
-          <div class="inline-item">
-            <p class="detail-info">
-              <strong>Nama:</strong>
-              <span>{{ selectedmahasiswa.nama }}</span>
-            </p>
+    <div class="tabs">
+      <h2 :class="{ active: currentPage === 'berkas' }" @click="navigateTo('berkas')">Berkas Mahasiswa</h2>
+      <h2 :class="{ active: currentPage === 'dosen' }" @click="navigateTo('dosen')">Input Dosen Penguji</h2>
+    </div>
+
+    <div v-if="currentPage === 'berkas'">
+      <div v-if="selectedMahasiswa" class="detail-item">
+        <div class="mahasiswa-detail">
+          <div class="basic-details">
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>Nama:</strong>
+                <span>{{ selectedMahasiswa.nama }}</span>
+              </p>
+            </div>
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>NIM:</strong>
+                <span>{{ selectedMahasiswa.nim }}</span>
+              </p>
+            </div>
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>Email:</strong>
+                <span>{{ selectedMahasiswa.email }}</span>
+              </p>
+            </div>
           </div>
-          <div class="inline-item">
-            <p class="detail-info">
-              <strong>NIM:</strong>
-              <span>{{ selectedmahasiswa.nim }}</span>
-            </p>
+          <p class="detail-info">
+            <strong>Tanggal:</strong>
+            <span>{{ selectedMahasiswa.tanggal }}</span>
+          </p>
+          <p class="detail-info">
+            <strong>Judul:</strong>
+            <span>{{ selectedMahasiswa.judul }}</span>
+          </p>
+          <p class="detail-info">
+            <strong>Kategori TA:</strong>
+            <span>{{ selectedMahasiswa.kategoriTA }}</span>
+          </p>
+          <div class="calon-pembimbing">
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>Calon Dosen Pembimbing 1:</strong>
+                <span>{{ selectedMahasiswa.calonPembimbing1 }}</span>
+              </p>
+            </div>
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>Calon Dosen Pembimbing 2:</strong>
+                <span>{{ selectedMahasiswa.calonPembimbing2 }}</span>
+              </p>
+            </div>
           </div>
-          <div class="inline-item">
-            <p class="detail-info">
-              <strong>Email:</strong>
-              <span>{{ selectedmahasiswa.email }}</span>
-            </p>
+          <div class="berkas-catatan">
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>Berkas:</strong>
+                <span>
+                  <a :href="getFileUrl(selectedMahasiswa.berkas)" target="_blank">{{ getFileName(selectedMahasiswa.berkas) }}</a>
+                </span>
+              </p>
+            </div>
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>Catatan:</strong>
+                <span>
+                  <textarea v-model="selectedMahasiswa.catatan" placeholder="Masukkan catatan"></textarea>
+                </span>
+              </p>
+            </div>
           </div>
-        </div>
-        <!-- Additional Details -->
-        <p class="detail-info">
-          <strong>Tanggal:</strong>
-          <span>{{ selectedmahasiswa.tanggal }}</span>
-        </p>
-        <p class="detail-info">
-          <strong>Judul:</strong>
-          <span>{{ selectedmahasiswa.judul }}</span>
-        </p>
-        <p class="detail-info">
-          <strong>Kategori TA:</strong>
-          <span>{{ selectedmahasiswa.kategoriTA }}</span>
-        </p>
-        <!-- Calon Dosen Pembimbing -->
-        <div class="calon-pembimbing">
-          <div class="inline-item">
-            <p class="detail-info">
-              <strong>Calon Dosen Pembimbing 1:</strong>
-              <span>{{ selectedmahasiswa.calonPembimbing1 }}</span>
-            </p>
+          <div class="form-group">
+            <select v-model="selectedStatus">
+              <option v-for="option in statusOptions" :key="option" :value="option">{{ option }}</option>
+            </select>
+            <button class="simpan-button" @click="updateStatus">Simpan</button>
           </div>
-          <div class="inline-item">
-            <p class="detail-info">
-              <strong>Calon Dosen Pembimbing 2:</strong>
-              <span>{{ selectedmahasiswa.calonPembimbing2 }}</span>
-            </p>
-          </div>
-        </div>
-        <!-- Berkas -->
-        <div class="berkas-catatan">
-          <div class="inline-item">
-            <p class="detail-info">
-              <strong>Berkas:</strong>
-              <span>
-                <a :href="getFileUrl(selectedmahasiswa.berkas)" target="_blank">{{ getFileName(selectedmahasiswa.berkas) }}</a>
-              </span>
-            </p>
-          </div>
-          <!-- Catatan -->
-          <div class="inline-item">
-            <p class="detail-info">
-              <strong>Catatan:</strong>
-              <span>
-                <textarea v-model="selectedmahasiswa.catatan" placeholder="Masukkan catatan"></textarea>
-              </span>
-            </p>
-          </div>
-        </div>
-        <!-- Status Dropdown for Editing -->
-        <div class="form-group">
-          <select v-model="selectedStatus">
-            <option v-for="option in statusOptions" :key="option" :value="option">{{ option }}</option>
-          </select>
-          <button class="simpan-button" @click="updateStatus">Simpan</button>
         </div>
       </div>
+      <button class="btttn back-button" @click="goBack">
+        <i class="pi pi-arrow-left icon"></i> Kembali
+      </button>
     </div>
-    <button class="btttn back-button" @click="goBack">
-      <i class="pi pi-arrow-left icon"></i> Kembali
-    </button>
+    
+    <div v-if="currentPage === 'dosen'">
+      <table>
+        <thead>
+          <tr>
+            <th>NO</th>
+            <th>Nama Dosen</th>
+            <th>NIP</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(dosen, index) in dosenList" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ dosen.Nama }}</td>
+            <td>{{ dosen.NIP }}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="form-group">
+        <label for="dosenPenguji1">Dosen Penguji 1:</label>
+        <select v-model="dosenPenguji1">
+          <option v-for="dosen in dosenList" :key="dosen.NIP" :value="dosen.NIP">{{ dosen.Nama }} ({{ dosen.NIP }})</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="dosenPenguji2">Dosen Penguji 2:</label>
+        <select v-model="dosenPenguji2">
+          <option v-for="dosen in dosenList" :key="dosen.NIP" :value="dosen.NIP">{{ dosen.Nama }} ({{ dosen.NIP }})</option>
+        </select>
+      </div>
+      <button class="btttn simpan-button" @click="submitDosenPenguji">
+        Kirim
+      </button>
+    </div>
+
+    <div v-if="alertMessage" class="alert" :class="{'alert-success': alertType === 'success', 'alert-error': alertType === 'error'}">
+      {{ alertMessage }}
+    </div>
   </div>
 </template>
 
@@ -93,8 +131,14 @@ import axios from 'axios';
 export default {
   data() {
     return {
-      selectedmahasiswa: null,
+      currentPage: 'berkas',
+      selectedMahasiswa: null,
       selectedStatus: '',
+      dosenList: [],
+      dosenPenguji1: '',
+      dosenPenguji2: '',
+      alertMessage: '',
+      alertType: '',
     };
   },
   computed: {
@@ -111,22 +155,56 @@ export default {
       }
       try {
         const response = await axios.get(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}`);
-        this.selectedmahasiswa = response.data;
-        this.selectedStatus = this.selectedmahasiswa.status; // Set selectedStatus to the current status
+        this.selectedMahasiswa = response.data;
       } catch (error) {
         console.error('Error fetching mahasiswa details:', error);
+      }
+    },
+    async fetchDosenList() {
+      try {
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen');
+        this.dosenList = response.data;
+        console.log('Dosen list:', this.dosenList); // Debugging: Log dosenList to ensure data is fetched
+      } catch (error) {
+        console.error('Error fetching dosen list:', error);
       }
     },
     async updateStatus() {
       if (window.confirm('Are you sure that you want to change the status?')) {
         try {
-          const nim = this.selectedmahasiswa.nim;
-          await axios.put(`/api/pendaftaran/${nim}/status`, { status: this.selectedStatus });
-          this.selectedmahasiswa.status = this.selectedStatus; // Update the status locally
-          // Optionally, you can reload the mahasiswa details after updating the status
-          // this.fetchMahasiswaDetails();
+          const nim = this.selectedMahasiswa.nim;
+          await axios.put(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}/status`, { status: this.selectedStatus });
+          this.selectedMahasiswa.status = this.selectedStatus;
+          this.alertMessage = 'Status updated successfully';
+          this.alertType = 'success';
         } catch (error) {
           console.error('Error updating mahasiswa status:', error);
+          this.alertMessage = 'Error updating status';
+          this.alertType = 'error';
+        }
+      }
+    },
+    navigateTo(page) {
+      this.currentPage = page;
+    },
+    async submitDosenPenguji() {
+      console.log('Selected Dosen Penguji 1:', this.dosenPenguji1);
+      console.log('Selected Dosen Penguji 2:', this.dosenPenguji2);
+
+      if (window.confirm('Do you want to save changes for dosen penguji?')) {
+        try {
+          const nim = this.selectedMahasiswa.nim;
+          await axios.post(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}`, {
+            nip_penguji1: this.dosenPenguji1,
+            nip_penguji2: this.dosenPenguji2,
+          });
+          this.alertMessage = 'Penguji updated successfully';
+          this.alertType = 'success';
+          this.navigateTo('berkas');
+        } catch (error) {
+          console.error('Error updating dosen penguji:', error);
+          this.alertMessage = 'Error updating dosen penguji';
+          this.alertType = 'error';
         }
       }
     },
@@ -146,23 +224,42 @@ export default {
       this.$router.go(-1);
     }
   },
-  mounted() {
-    this.fetchMahasiswaDetails(); // Fetch data when the component is mounted
+  async mounted() {
+    await this.fetchMahasiswaDetails(); // Fetch data when the component is mounted
+    await this.fetchDosenList(); // Fetch dosen list when the component is mounted
   }
 };
 </script>
 
-<style scoped>
+<style>
+/* Your existing styles */
 .container {
-  margin: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
 }
 
-h2 {
+.tabs {
+  display: flex;
+  justify-content: flex-start;
   margin-bottom: 20px;
-  text-align: center;
+}
+
+.tabs h2 {
+  cursor: pointer;
+  padding: 10px 20px;
+  margin-right: 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.tabs h2:hover {
+  background-color: #e0e0e0;
+}
+
+.tabs h2.active {
+  background-color: #007bff;
+  color: white;
 }
 
 .detail-item {
@@ -272,7 +369,7 @@ textarea {
   background-color: #0056b3;
 }
 
-.back-button {
+.back-button, .select-dosen-button {
   cursor: pointer;
   border: none;
   border-radius: 4px;
@@ -286,10 +383,48 @@ textarea {
   margin-bottom: 50px;
   display: block;
   width: fit-content;
-  margin: 20px auto 0;
+  margin-left: 0;
 }
 
-.back-button:hover {
+.back-button:hover, .select-dosen-button:hover {
   background-color: #0056b3;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+th {
+  background-color: #f2f2f2;
+  text-align: left;
+}
+
+label {
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.alert {
+  padding: 15px;
+  margin-top: 20px;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.alert-error {
+  background-color: #f8d7da;
+  color: #721c24;
 }
 </style>

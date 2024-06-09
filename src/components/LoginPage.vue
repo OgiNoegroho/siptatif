@@ -28,51 +28,41 @@
 </template>
 
 <script>
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+
 export default {
-  data() {
-    return {
-      loginData: {
-        email: '',
-        password: ''
-      },
-      isLoading: false,
-      loginMessage: ''
-    };
-  },
-  methods: {
-    login() {
-      this.isLoading = true;
-      fetch('https://express-mysql-virid.vercel.app/api/user/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.loginData)
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (data.token) {
-          localStorage.setItem('token', data.token);
-          // Redirect or handle successful login
-          this.$router.push('/Home'); // example redirect
-        } else {
-          this.loginMessage = data.message;
-        }
-        this.isLoading = false;
-      })
-      .catch(error => {
+  setup() {
+    const loginData = ref({ email: '', password: '' });
+    const isLoading = ref(false);
+    const loginMessage = ref('');
+    const router = useRouter();
+    const store = useStore();
+
+    const login = async () => {
+      isLoading.value = true;
+      loginMessage.value = '';
+      try {
+        await store.dispatch('auth/login', loginData.value);
+        router.push('/Home'); // Redirect to home page
+      } catch (error) {
+        loginMessage.value = 'An error occurred during login.';
         console.error('Error logging in:', error);
-        this.loginMessage = 'An error occurred while logging in.';
-        this.isLoading = false;
-      });
-    }
+      } finally {
+        isLoading.value = false;
+      }
+    };
+
+    return {
+      loginData,
+      isLoading,
+      loginMessage,
+      login,
+    };
   }
 };
 </script>
-
-<style scoped>
-/* Paste your CSS styles here */
-</style>
 
 
 <style scoped>
@@ -239,7 +229,4 @@ button.register-button {
   font-size: 16px;
   font-weight: bold;
 }
-
 </style>
-
-

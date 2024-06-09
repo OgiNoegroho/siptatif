@@ -1,12 +1,14 @@
-// store/modules/auth.js
 import axios from 'axios';
 
 export default {
+  namespaced: true,
   state: {
-    token: null
+    token: localStorage.getItem('token') || null,
+    user: null
   },
   getters: {
-    isLoggedIn: state => !!state.token
+    isLoggedIn: state => !!state.token,
+    getUser: state => state.user
   },
   actions: {
     login({ commit }, userData) {
@@ -22,7 +24,7 @@ export default {
           });
       });
     },
-    register(_, userData) { // <-- Removed unused 'commit' parameter
+    register(_, userData) {
       return new Promise((resolve, reject) => {
         axios.post('https://express-mysql-virid.vercel.app/api/user/register', userData)
           .then(() => {
@@ -32,13 +34,43 @@ export default {
             reject(error);
           });
       });
+    },
+    async fetchUser({ commit }) {
+      const token = localStorage.getItem('token');
+      if (!token) return;
+
+      try {
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/user/profile', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
+        });
+        const data = response.data;
+        if (data.success) {
+          commit('setUser', data);
+        } else {
+          console.error('Failed to fetch user:', data.message);
+        }
+      } catch (error) {
+        console.error('Error fetching user:', error);
+      }
+    },
+    async updateUser({ commit }, user) {
+      commit('setUser', user);
     }
   },
   mutations: {
     setToken(state, token) {
       state.token = token;
-      // You may want to store the token in localStorage or sessionStorage for persistence
       localStorage.setItem('token', token);
+    },
+    setUser(state, user) {
+      state.user = user;
+    },
+    clearAuthData(state) {
+      state.token = null;
+      state.user = null;
+      localStorage.removeItem('token');
     }
   }
 };

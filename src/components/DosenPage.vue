@@ -47,7 +47,6 @@
             <!-- Buttons for edit, delete, and detail actions -->
             <button class="btttn tombol-edit" @click="editDosen(index)">Edit</button>
             <button class="btttn tombol-delete" @click="confirmDelete(dosen.NIP, index)">Hapus</button>
-            <button class="btttn tombol-detail" @click="showDetail(dosen)">Detail</button>
           </td>
         </tr>
       </tbody>
@@ -80,9 +79,9 @@ export default {
           console.error('Error fetching dosen list:', error);
         });
     },
-    showDetail(dosen) {
-      this.$router.push({ name: 'Detai', params: { nip: dosen.NIP } });
-    },
+   // showDetail(dosen) {
+    //  this.$router.push({ name: 'Detai', params: { nip: dosen.NIP } });
+   // },
     confirmDelete(nip, index) {
       if (confirm("Apakah Anda yakin ingin menghapus data dosen ini?")) {
         fetch(`https://express-mysql-virid.vercel.app/api/dosen/${nip}`, {
@@ -195,14 +194,6 @@ export default {
   }
 }
 </script>
-
-<style scoped>
-/* Styles for the component */
-</style>
-
-
-
-
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
