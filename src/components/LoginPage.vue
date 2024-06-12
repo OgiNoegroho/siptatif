@@ -8,7 +8,7 @@
     <div class="form-container">
       <h1>Login</h1>
       <form @submit.prevent="login">
-        <label for="email">Masukkan Email Anda</label>
+        <label for="email">Masukkan Email </label>
         <input type="email" v-model="loginData.email" id="email" required>
         <br>
         <label for="password">Password</label>
