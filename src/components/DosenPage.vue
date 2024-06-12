@@ -2,6 +2,9 @@
   <div>
     <h2>Data Dosen</h2>
 
+    <!-- Display Success/Error Message -->
+    <div v-if="message" :class="messageType">{{ message }}</div>
+
     <!-- Modal for Tambah Data Dosen -->
     <div v-if="showModal" class="modal">
       <div class="modal-content">
@@ -13,6 +16,13 @@
           </div>
           <div class="form-group">
             <input type="text" v-model="inputNIP" placeholder="NIP" required>
+          </div>
+          <div class="form-group">
+            <select v-model="inputJenisKelamin" required>
+              <option value="" disabled selected>Pilih Jenis Kelamin</option>
+              <option value="Laki-laki">Laki-laki</option>
+              <option value="Perempuan">Perempuan</option>
+            </select>
           </div>
           <div class="form-group">
             <button type="submit" class="btttn tambah-button">
@@ -35,6 +45,7 @@
           <th>No</th>
           <th>Nama Dosen</th>
           <th>NIP</th>
+          <th>Jenis Kelamin</th>
           <th>Aksi</th>
         </tr>
       </thead>
@@ -43,6 +54,7 @@
           <td>{{ index + 1 }}</td>
           <td>{{ dosen.Nama }}</td> <!-- Display nama of the dosen -->
           <td>{{ dosen.NIP }}</td> <!-- Display NIP of the dosen -->
+          <td>{{ dosen.JenisKelamin }}</td> <!-- Display JenisKelamin of the dosen -->
           <td>
             <!-- Buttons for edit, delete, and detail actions -->
             <button class="btttn tombol-edit" @click="editDosen(index)">Edit</button>
@@ -62,7 +74,10 @@ export default {
       editingIndex: null,
       inputNama: '',
       inputNIP: '',
-      dosenList: []
+      inputJenisKelamin: '',
+      dosenList: [],
+      message: '',
+      messageType: ''
     };
   },
   created() {
@@ -77,11 +92,9 @@ export default {
         })
         .catch(error => {
           console.error('Error fetching dosen list:', error);
+          this.displayMessage('Error fetching dosen list', 'error');
         });
     },
-   // showDetail(dosen) {
-    //  this.$router.push({ name: 'Detai', params: { nip: dosen.NIP } });
-   // },
     confirmDelete(nip, index) {
       if (confirm("Apakah Anda yakin ingin menghapus data dosen ini?")) {
         fetch(`https://express-mysql-virid.vercel.app/api/dosen/${nip}`, {
@@ -89,25 +102,18 @@ export default {
         })
         .then(response => response.json())
         .then(result => {
-          if (result.success) {
+          if (!result.error) {
             this.dosenList.splice(index, 1);
-            this.updateNoValues();
-            console.log("Data dosen dihapus");
+            this.displayMessage('Data dosen berhasil dihapus', 'success');
           } else {
-            alert(result.message);
+            this.displayMessage(result.error, 'error');
           }
         })
         .catch(error => {
           console.error('Error deleting dosen:', error);
+          this.displayMessage('Error deleting dosen', 'error');
         });
-      } else {
-        console.log("Penghapusan data dibatalkan");
       }
-    },
-    updateNoValues() {
-      this.dosenList.forEach((dosen, index) => {
-        dosen.no = index + 1;
-      });
     },
     submitForm() {
       if (this.editingIndex === null) {
@@ -123,26 +129,29 @@ export default {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          nama: this.inputNama,
-          nip: this.inputNIP
+          NIP: this.inputNIP,
+          Nama: this.inputNama,
+          JenisKelamin: this.inputJenisKelamin
         })
       })
       .then(response => response.json())
       .then(data => {
-        if (data.success) {
+        if (!data.error) {
           this.dosenList.push({
             Nama: this.inputNama,
-            NIP: this.inputNIP
+            NIP: this.inputNIP,
+            JenisKelamin: this.inputJenisKelamin
           });
-          this.updateNoValues();
           this.resetForm();
           this.closeModal();
+          this.displayMessage('Data dosen berhasil ditambahkan', 'success');
         } else {
-          alert(data.message);
+          this.displayMessage(data.error, 'error');
         }
       })
       .catch(error => {
         console.error('Error adding dosen:', error);
+        this.displayMessage('Error adding dosen', 'error');
       });
     },
     updateData() {
@@ -152,25 +161,28 @@ export default {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          nama: this.inputNama
+          Nama: this.inputNama,
+          JenisKelamin: this.inputJenisKelamin
         })
       })
       .then(response => response.json())
       .then(data => {
-        if (data.success) {
+        if (!data.error) {
           this.dosenList[this.editingIndex] = {
             Nama: this.inputNama,
-            NIP: this.inputNIP
+            NIP: this.inputNIP,
+            JenisKelamin: this.inputJenisKelamin
           };
-          this.updateNoValues();
           this.resetForm();
           this.closeModal();
+          this.displayMessage('Data dosen berhasil diupdate', 'success');
         } else {
-          alert(data.message);
+          this.displayMessage(data.error, 'error');
         }
       })
       .catch(error => {
         console.error('Error updating dosen:', error);
+        this.displayMessage('Error updating dosen', 'error');
       });
     },
     editDosen(index) {
@@ -178,6 +190,7 @@ export default {
       const dosen = this.dosenList[index];
       this.inputNama = dosen.Nama;
       this.inputNIP = dosen.NIP;
+      this.inputJenisKelamin = dosen.JenisKelamin;
       this.openModal();
     },
     openModal() {
@@ -190,11 +203,19 @@ export default {
     resetForm() {
       this.inputNama = '';
       this.inputNIP = '';
+      this.inputJenisKelamin = '';
+    },
+    displayMessage(message, type) {
+      this.message = message;
+      this.messageType = type;
+      setTimeout(() => {
+        this.message = '';
+        this.messageType = '';
+      }, 3000);
     }
   }
 }
 </script>
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
@@ -311,42 +332,57 @@ table tr:hover {
   position: absolute;
   top: 10px;
   right: 10px;
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
   cursor: pointer;
 }
 
 .form-container {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-}
-
-.form-group {
-  margin-bottom: 7px;
-}
-
-#formTambahDosenModal input,
-#formTambahDosenModal select {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.form-container > .form-group:last-child {
-  margin-bottom: 0;
-}
-
-table tbody tr td:last-child {
-  display: flex;
-  justify-content: center;
   align-items: center;
 }
 
-.tombol-edit,
-.tombol-detail,
-.tombol-delete {
-  margin: 0 5px;
+.form-group {
+  margin-bottom: 10px;
+  width: 100%;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+.tambah-button {
+  background-color: #36802D;
+  color: white;
+  padding: 10px 20px;
+  margin-top: 10px;
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.message {
+  margin: 20px;
+  padding: 10px;
+  border-radius: 4px;
+  text-align: center;
+}
+
+.success {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.error {
+  background-color: #f44336;
+  color: white;
 }
 </style>
-

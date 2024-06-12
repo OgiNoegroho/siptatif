@@ -119,26 +119,32 @@ export default {
       });
     },
     updateProfilePicture(event) {
-      const file = event.target.files[0];
-      const formData = new FormData();
-      formData.append('profile_pic', file);
+  const file = event.target.files[0];
+  const formData = new FormData();
+  formData.append('profile_pic', file);
 
-      axios.put('https://express-mysql-virid.vercel.app/api/user/profile/picture', formData, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-          'Content-Type': 'multipart/form-data'
-        }
-      })
-      .then(response => {
-        this.profile.profile_pic = response.data.profilePic.profile_pic; // Use correct response data structure
-        this.showEditPicture = false;
-        this.showMessage('Profile picture updated successfully.', true);
-      })
-      .catch(error => {
-        console.error('Error updating profile picture:', error);
-        this.showMessage('Error updating profile picture.', false);
-      });
-    },
+  axios.put('https://express-mysql-virid.vercel.app/api/user/profile/picture', formData, {
+    headers: {
+      'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+  .then(response => {
+    this.profile.profile_pic = response.data.profilePic.profile_pic;
+    this.showEditPicture = false;
+    this.showMessage('Profile picture updated successfully.', true);
+  })
+  .catch(error => {
+    if (error.response) {
+      console.error('Error response:', error.response);
+    } else if (error.request) {
+      console.error('Error request:', error.request);
+    } else {
+      console.error('Error message:', error.message);
+    }
+    this.showMessage('Error updating profile picture.', false);
+  });
+},
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -205,7 +211,6 @@ export default {
 .profile-pic {
   width: 100%; /* Ensure profile picture covers the whole container */
   height: 100%; /* Ensure profile picture covers the whole container */
-  margin-top: 50%;
   object-fit: cover;
   cursor: pointer;
 }
