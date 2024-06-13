@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -39,15 +41,17 @@ export default {
     this.fetchDosenList();
   },
   methods: {
-    fetchDosenList() {
-      fetch('https://express-mysql-virid.vercel.app/api/dosen/penguji')
-        .then(response => response.json())
-        .then(data => {
-          this.dosenList = data;
-        })
-        .catch(error => {
-          console.error('Error fetching dosen penguji list:', error);
+    async fetchDosenList() {
+      try {
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen/penguji', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         });
+        this.dosenList = response.data;
+      } catch (error) {
+        console.error('Error fetching dosen penguji list:', error);
+      }
     },
     showDetail(dosen) {
       this.$router.push({ name: 'DetailPenguji', params: { nip_penguji: dosen.nip_penguji } });
@@ -107,6 +111,12 @@ table tr:hover {
   background-color: #ddd;
 }
 
+table tbody tr td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .btttn {
   padding: 8px 12px;
   margin-left: 20px;
@@ -128,12 +138,6 @@ table tr:hover {
 .tombol-detail {
   background-color: #2196F3;
   color: white;
-}
-
-table tbody tr td:last-child {
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .tombol-detail {

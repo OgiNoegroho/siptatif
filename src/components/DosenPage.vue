@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 export default {
   data() {
     return {
@@ -84,59 +86,59 @@ export default {
     this.fetchDosenList();
   },
   methods: {
-    fetchDosenList() {
-      fetch('https://express-mysql-virid.vercel.app/api/dosen')
-        .then(response => response.json())
-        .then(data => {
-          this.dosenList = data;
-        })
-        .catch(error => {
-          console.error('Error fetching dosen list:', error);
-          this.displayMessage('Error fetching dosen list', 'error');
+    async fetchDosenList() {
+      try {
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
         });
+        this.dosenList = response.data;
+      } catch (error) {
+        console.error('Error fetching dosen list:', error);
+        this.displayMessage('Error fetching dosen list', 'error');
+      }
     },
-    confirmDelete(nip, index) {
+    async confirmDelete(nip, index) {
       if (confirm("Apakah Anda yakin ingin menghapus data dosen ini?")) {
-        fetch(`https://express-mysql-virid.vercel.app/api/dosen/${nip}`, {
-          method: 'DELETE'
-        })
-        .then(response => response.json())
-        .then(result => {
-          if (!result.error) {
+        try {
+          const response = await axios.delete(`https://express-mysql-virid.vercel.app/api/dosen/${nip}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          if (!response.data.error) {
             this.dosenList.splice(index, 1);
             this.displayMessage('Data dosen berhasil dihapus', 'success');
           } else {
-            this.displayMessage(result.error, 'error');
+            this.displayMessage(response.data.error, 'error');
           }
-        })
-        .catch(error => {
+        } catch (error) {
           console.error('Error deleting dosen:', error);
           this.displayMessage('Error deleting dosen', 'error');
-        });
+        }
       }
     },
-    submitForm() {
+    async submitForm() {
       if (this.editingIndex === null) {
-        this.tambahData();
+        await this.tambahData();
       } else {
-        this.updateData();
+        await this.updateData();
       }
     },
-    tambahData() {
-      fetch('https://express-mysql-virid.vercel.app/api/dosen', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+    async tambahData() {
+      try {
+        const response = await axios.post('https://express-mysql-virid.vercel.app/api/dosen', {
           NIP: this.inputNIP,
           Nama: this.inputNama,
           JenisKelamin: this.inputJenisKelamin
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (!data.error) {
+        }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (!response.data.error) {
           this.dosenList.push({
             Nama: this.inputNama,
             NIP: this.inputNIP,
@@ -146,28 +148,25 @@ export default {
           this.closeModal();
           this.displayMessage('Data dosen berhasil ditambahkan', 'success');
         } else {
-          this.displayMessage(data.error, 'error');
+          this.displayMessage(response.data.error, 'error');
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error adding dosen:', error);
         this.displayMessage('Error adding dosen', 'error');
-      });
+      }
     },
-    updateData() {
-      fetch(`https://express-mysql-virid.vercel.app/api/dosen/${this.inputNIP}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
+    async updateData() {
+      try {
+        const response = await axios.put(`https://express-mysql-virid.vercel.app/api/dosen/${this.inputNIP}`, {
           Nama: this.inputNama,
           JenisKelamin: this.inputJenisKelamin
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        if (!data.error) {
+        }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        if (!response.data.error) {
           this.dosenList[this.editingIndex] = {
             Nama: this.inputNama,
             NIP: this.inputNIP,
@@ -177,13 +176,12 @@ export default {
           this.closeModal();
           this.displayMessage('Data dosen berhasil diupdate', 'success');
         } else {
-          this.displayMessage(data.error, 'error');
+          this.displayMessage(response.data.error, 'error');
         }
-      })
-      .catch(error => {
+      } catch (error) {
         console.error('Error updating dosen:', error);
         this.displayMessage('Error updating dosen', 'error');
-      });
+      }
     },
     editDosen(index) {
       this.editingIndex = index;
@@ -216,6 +214,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
@@ -234,11 +233,9 @@ h2 {
 
 table {
   width: 96.5%;
-  max-width: 1500px;
+  max-width: 2000px;
   border-collapse: collapse;
-  margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin: 20px auto; /* Center the table */
 }
 
 table th,
@@ -260,24 +257,28 @@ table tr:hover {
   background-color: #ddd;
 }
 
+table tbody tr td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .btttn {
   padding: 8px 12px;
-  margin-left: 20px;
-  margin-right: 20px;
+  margin-right: 10px;
   cursor: pointer;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   font-size: 14px;
   text-align: center;
   text-decoration: none;
 }
 
 .tambah-button {
-  background-color: #36802D;
+  background-color: #4CAF50;
   color: white;
-  float: left;
-  margin-bottom: 20px;
-  margin-top: 10px;
+  margin-left: 20px;
+  margin-top: 20px;
 }
 
 .icon {
@@ -312,29 +313,28 @@ table tr:hover {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.7);
-  z-index: 1000;
 }
 
 .modal-content {
-  position: relative;
-  padding: 20px;
-  background-color: #fefefe;
-  border-radius: 5px;
-  width: 60%;
+  background-color: #fff;
+  padding: 15px;
+  border: 1px solid #888;
+  width: 90%;
   max-width: 400px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  border-radius: 8px;
 }
 
 .close-btn {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  font-size: 20px;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
   font-weight: bold;
-  color: #000;
+}
+
+.close-btn:hover,
+.close-btn:focus {
+  color: black;
+  text-decoration: none;
   cursor: pointer;
 }
 
@@ -359,14 +359,10 @@ table tr:hover {
 }
 
 .tambah-button {
-  background-color: #36802D;
+  background-color: #4CAF50;
   color: white;
-  padding: 10px 20px;
-  margin-top: 10px;
-  cursor: pointer;
-  border: none;
-  border-radius: 4px;
-  font-size: 16px;
+  margin-left: 20px;
+  margin-top: 20px;
 }
 
 .message {

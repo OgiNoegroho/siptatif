@@ -104,14 +104,14 @@
       </table>
       <div class="form-group">
         <label for="dosenPenguji1">Dosen Penguji 1:</label>
-        <select v-model="dosenPenguji1">
+        <select v-model="dosenPenguji1" @change="handlePenguji1Change">
           <option v-for="dosen in dosenList" :key="dosen.NIP" :value="dosen.NIP">{{ dosen.Nama }} ({{ dosen.NIP }})</option>
         </select>
       </div>
       <div class="form-group">
         <label for="dosenPenguji2">Dosen Penguji 2:</label>
         <select v-model="dosenPenguji2">
-          <option v-for="dosen in dosenList" :key="dosen.NIP" :value="dosen.NIP">{{ dosen.Nama }} ({{ dosen.NIP }})</option>
+          <option v-for="dosen in filteredDosenList2" :key="dosen.NIP" :value="dosen.NIP">{{ dosen.Nama }} ({{ dosen.NIP }})</option>
         </select>
       </div>
       <button class="btttn simpan-button" @click="submitDosenPenguji">
@@ -139,6 +139,7 @@ export default {
       dosenPenguji2: '',
       alertMessage: '',
       alertType: '',
+      filteredDosenList2: [] // To store the filtered list for Penguji 2
     };
   },
   computed: {
@@ -154,7 +155,11 @@ export default {
         return;
       }
       try {
-        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}`);
+        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         this.selectedMahasiswa = response.data;
       } catch (error) {
         console.error('Error fetching mahasiswa details:', error);
@@ -162,18 +167,38 @@ export default {
     },
     async fetchDosenList() {
       try {
-        const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen');
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         this.dosenList = response.data;
         console.log('Dosen list:', this.dosenList); // Debugging: Log dosenList to ensure data is fetched
       } catch (error) {
         console.error('Error fetching dosen list:', error);
       }
     },
+    async fetchDosenWithoutNIP(nip) {
+      try {
+        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/dosen/without/${nip}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.filteredDosenList2 = response.data;
+      } catch (error) {
+        console.error('Error fetching filtered dosen list:', error);
+      }
+    },
     async updateStatus() {
       if (window.confirm('Are you sure that you want to change the status?')) {
         try {
           const nim = this.selectedMahasiswa.nim;
-          await axios.put(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}/status`, { status: this.selectedStatus });
+          await axios.put(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}/status`, { status: this.selectedStatus }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
           this.selectedMahasiswa.status = this.selectedStatus;
           this.alertMessage = 'Status updated successfully';
           this.alertType = 'success';
@@ -197,36 +222,41 @@ export default {
           await axios.post(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}`, {
             nip_penguji1: this.dosenPenguji1,
             nip_penguji2: this.dosenPenguji2,
-          });
+          }, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
           this.alertMessage = 'Penguji updated successfully';
           this.alertType = 'success';
           this.navigateTo('berkas');
         } catch (error) {
           console.error('Error updating dosen penguji:', error);
-          this.alertMessage = 'Error updating dosen penguji';
+          this.alertMessage = 'Error updating penguji';
           this.alertType = 'error';
         }
       }
     },
-    getFileUrl(file) {
-      if (file) {
-        return URL.createObjectURL(file);
-      }
-      return '#';
+    getFileUrl(berkas) {
+      return `https://express-mysql-virid.vercel.app/uploads/${berkas}`;
     },
-    getFileName(file) {
-      if (file) {
-        return file.name;
+    getFileName(berkas) {
+      if (!berkas) {
+        return 'No file available'; // or return an empty string or any placeholder
       }
-      return 'Tidak Ada Berkas';
+      const parts = berkas.split('/');
+      return parts[parts.length - 1];
     },
     goBack() {
       this.$router.go(-1);
+    },
+    handlePenguji1Change() {
+      this.fetchDosenWithoutNIP(this.dosenPenguji1);
     }
   },
   async mounted() {
-    await this.fetchMahasiswaDetails(); // Fetch data when the component is mounted
-    await this.fetchDosenList(); // Fetch dosen list when the component is mounted
+    await this.fetchMahasiswaDetails();
+    await this.fetchDosenList();
   }
 };
 </script>

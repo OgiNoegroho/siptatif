@@ -40,7 +40,11 @@ export default {
     async fetchDosenDetail() {
       try {
         const nippenguji = this.$route.params.nip_penguji;
-        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/dosen/penguji/${nippenguji}`);
+        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/dosen/penguji/${nippenguji}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         this.dosen = response.data.dosen || null;
         this.mahasiswaList = response.data.mahasiswaList || [];
       } catch (error) {

@@ -7,52 +7,57 @@
       <div class="modal-content">
         <span class="close-btn" @click="closeModal">&times;</span>
         <h3>Tambah Data Mahasiswa</h3>
-        <form id="formTambahDataModal" class="form-container">
-          <div class="form-group">
-            <input type="text" v-model="inputTanggal" placeholder="Tanggal">
-          </div>
+        <form id="formTambahDataModal" class="form-container" @submit.prevent="tambahData">
           <div class="form-group">
             <!-- Combined field for Nama dan NIM -->
-            <select v-model="selectedMahasiswa" id="mahasiswa">
-              <option v-for="mahasiswa in mahasiswaOptions" :key="mahasiswa.nim">{{ mahasiswa.nama_mahasiswa }} - {{ mahasiswa.nim_mahasiswa }}</option>
+            <select v-model="selectedMahasiswa" required>
+              <option value="" disabled>Pilih Mahasiswa</option>
+              <option v-for="mahasiswa in mahasiswaOptions" :key="mahasiswa.NIM" :value="mahasiswa.NIM">
+                {{ mahasiswa.Nama }} - {{ mahasiswa.NIM }}
+              </option>
             </select>
           </div>
           <div class="form-group">
-            <input type="text" v-model="inputEmail" placeholder="Email">
+            <input type="email" v-model="inputEmail" placeholder="Email" required>
           </div>
           <div class="form-group">
-            <input type="text" v-model="inputJudul" placeholder="Judul">
+            <input type="text" v-model="inputJudul" placeholder="Judul" required>
           </div>
           <div class="form-group">
             <label for="calonPembimbing1">Calon Pembimbing 1:</label>
-            <select v-model="inputCalonPembimbing1" id="calonPembimbing1">
-              <option v-for="dosen in availableDosenList1" :key="dosen.nip" :value="dosen.nip">{{ dosen.nama_dosen }}</option>
+            <select v-model="inputCalonPembimbing1" id="calonPembimbing1" @change="handlePembimbing1Change" required>
+              <option value="" disabled>Pilih Pembimbing 1</option>
+              <option v-for="dosen in dosenList" :key="dosen.NIP" :value="dosen.NIP">
+                {{ dosen.Nama }} - {{ dosen.NIP }}
+              </option>
             </select>
           </div>
           <div class="form-group">
             <label for="calonPembimbing2">Calon Pembimbing 2:</label>
-            <select v-model="inputCalonPembimbing2" id="calonPembimbing2">
-              <option v-for="dosen in availableDosenList2" :key="dosen.nip" :value="dosen.nip">{{ dosen.nama_dosen }}</option>
+            <select v-model="inputCalonPembimbing2" id="calonPembimbing2" required>
+              <option value="" disabled>Pilih Pembimbing 2</option>
+              <option v-for="dosen in filteredDosenList2" :key="dosen.NIP" :value="dosen.NIP">
+                {{ dosen.Nama }} - {{ dosen.NIP }}
+              </option>
             </select>
           </div>
           <div class="form-group">
-            <input type="file" @change="onFileChange" placeholder="Berkas">
-          </div>
-          <div class="form-group">
-            <select id="kategoriTA" v-model="inputKategoriTA">
+            <select v-model="inputKategoriTA" required>
+              <option value="" disabled>Pilih Kategori TA</option>
               <option value="Penelitian">Penelitian</option>
               <option value="Proyek Desain">Proyek Desain</option>
               <option value="Pengembangan Produk">Pengembangan Produk</option>
             </select>
           </div>
           <div class="form-group">
-            <select id="jenisTA" v-model="inputJenisTA">
+            <select v-model="inputJenisTA" required>
+              <option value="" disabled>Pilih Jenis TA</option>
               <option value="Laporan">Laporan</option>
               <option value="Paper">Paper</option>
             </select>
           </div>
           <div class="form-group">
-            <button class="btttn tambah-button" @click.prevent="tambahData">Tambah Data Mahasiswa</button>
+            <button class="btttn tambah-button">Tambah Data Mahasiswa</button>
           </div>
         </form>
       </div>
@@ -62,6 +67,10 @@
     <button class="btttn tambah-button" @click="openModal">
       <i class="pi pi-plus-circle icon"></i> Tambah Data Mahasiswa
     </button>
+
+    <!-- Success/Error Message -->
+    <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
+    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
 
     <table class="mahasiswa-table">
       <!-- Table headers -->
@@ -111,33 +120,45 @@ export default {
   data() {
     return {
       mahasiswaList: [],
-      mahasiswaOptions: [], // Array to hold mahasiswa options
+      mahasiswaOptions: [],
       showModal: false,
-      inputTanggal: '',
-      selectedMahasiswa: '', // Updated to hold selected mahasiswa
+      selectedMahasiswa: '',
       inputEmail: '',
       inputJudul: '',
       inputCalonPembimbing1: '',
       inputCalonPembimbing2: '',
       inputKategoriTA: '',
       inputJenisTA: '',
-      availableDosenList1: [],
-      availableDosenList2: [],
-      selectedFile: null
+      dosenList: [],
+      filteredDosenList2: [], // To store the filtered list for Pembimbing 2
+      successMessage: '',
+      errorMessage: ''
     };
   },
   methods: {
     async fetchData() {
       try {
-        const response = await axios.get('https://express-mysql-virid.vercel.app/api/pendaftaran');
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/pendaftaran', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         this.mahasiswaList = response.data;
+        // Format the date
+        this.mahasiswaList.forEach(mahasiswa => {
+          mahasiswa.tanggal = new Date(mahasiswa.tanggal).toISOString().split('T')[0];
+        });
       } catch (error) {
         console.error('Error fetching data:', error);
       }
     },
-    async fetchMahasiswaOptions() { // Fetch mahasiswa options from endpoint
+    async fetchMahasiswaOptions() {
       try {
-        const response = await axios.get('https://express-mysql-virid.vercel.app/api/mahasiswa/nim');
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/mahasiswa', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         this.mahasiswaOptions = response.data;
       } catch (error) {
         console.error('Error fetching mahasiswa options:', error);
@@ -145,14 +166,26 @@ export default {
     },
     async fetchDosen() {
       try {
-        const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen/mahasiswapdosen');
-        const dosenList = response.data.dosenList;
-
-        // Filter out the Dosen who are already chosen as Pembimbing 1 or Pembimbing 2
-        this.availableDosenList1 = dosenList.filter(dosen => dosen.nip !== this.inputCalonPembimbing2);
-        this.availableDosenList2 = dosenList.filter(dosen => dosen.nip !== this.inputCalonPembimbing1);
+        const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen', {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.dosenList = response.data || [];
       } catch (error) {
         console.error('Error fetching dosen data:', error);
+      }
+    },
+    async fetchDosenWithoutNIP(nip) {
+      try {
+        const response = await axios.get(`https://express-mysql-virid.vercel.app/api/dosen/without/${nip}`, {
+          headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        this.filteredDosenList2 = response.data;
+      } catch (error) {
+        console.error('Error fetching filtered dosen list:', error);
       }
     },
     showDetail(mahasiswa) {
@@ -161,9 +194,11 @@ export default {
     async confirmDelete(mahasiswa) {
       if (confirm("Apakah Anda yakin ingin menghapus data mahasiswa ini?")) {
         try {
-          // Send request to delete data
-          await axios.delete(`https://express-mysql-virid.vercel.app/api/pendaftaran/${mahasiswa.nim}`);
-          // Remove deleted mahasiswa from mahasiswaList
+          await axios.delete(`https://express-mysql-virid.vercel.app/api/pendaftaran/${mahasiswa.nim}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
           const index = this.mahasiswaList.findIndex(item => item.nim === mahasiswa.nim);
           if (index !== -1) {
             this.mahasiswaList.splice(index, 1);
@@ -183,64 +218,56 @@ export default {
       this.resetForm();
     },
     resetForm() {
-      this.inputTanggal = '';
-      this.selectedMahasiswa = ''; // Reset selectedMahasiswa
+      this.selectedMahasiswa = '';
       this.inputEmail = '';
       this.inputJudul = '';
       this.inputCalonPembimbing1 = '';
       this.inputCalonPembimbing2 = '';
       this.inputKategoriTA = '';
       this.inputJenisTA = '';
-      this.selectedFile = null;
-    },
-    onFileChange(event) {
-      this.selectedFile = event.target.files[0];
-    },
-    generateIdPendaftaran() {
-      // Generate a unique ID for the pendaftaran. This is just a simple example.
-      return 'P' + new Date().getTime();
+      this.successMessage = '';
+      this.errorMessage = '';
     },
     async tambahData() {
-      const selectedMahasiswaData = this.selectedMahasiswa.split(' - '); // Split selected mahasiswa to extract Nama and NIM
-      const formData = new FormData();
-      formData.append('id_pendaftaran', this.generateIdPendaftaran());
-      formData.append('tanggal', this.inputTanggal);
-      formData.append('nama', selectedMahasiswaData[0]); // Extracted Nama
-      formData.append('nim', selectedMahasiswaData[1]); // Extracted NIM
-      formData.append('email', this.inputEmail);
-      formData.append('judul', this.inputJudul);
-      formData.append('nip_pembimbing1', this.inputCalonPembimbing1);
-      formData.append('nip_pembimbing2', this.inputCalonPembimbing2);
-      formData.append('kategoriTA', this.inputKategoriTA);
-      formData.append('jenisTA', this.inputJenisTA);
-      formData.append('status', 'menunggu');
-      if (this.selectedFile) {
-        formData.append('berkas', this.selectedFile);
-      }
-
       try {
-        const response = await axios.post('https://express-mysql-virid.vercel.app/api/pendaftaran', formData, {
+        const NIM = this.selectedMahasiswa;
+        const data = {
+          NIM,
+          Judul_TA: this.inputJudul,
+          KategoriTA: this.inputKategoriTA,
+          JenisTA: this.inputJenisTA,
+          nip_pembimbing1: this.inputCalonPembimbing1,
+          nip_pembimbing2: this.inputCalonPembimbing2,
+          nip_penguji1: null,
+          nip_penguji2: null,
+          status: 'menunggu'
+        };
+
+        await axios.post('https://express-mysql-virid.vercel.app/api/pendaftaran', data, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         });
-        this.mahasiswaList.push(response.data);
+
+        this.successMessage = 'Data mahasiswa berhasil ditambahkan';
         this.closeModal();
+        this.fetchData();
       } catch (error) {
+        this.errorMessage = 'Terjadi kesalahan saat menambahkan data mahasiswa';
         console.error('Error adding data:', error);
       }
+    },
+    handlePembimbing1Change() {
+      this.fetchDosenWithoutNIP(this.inputCalonPembimbing1);
     }
   },
   mounted() {
     this.fetchData();
     this.fetchDosen();
-    this.fetchMahasiswaOptions(); // Call fetchMahasiswaOptions on mount
+    this.fetchMahasiswaOptions();
   }
 };
 </script>
-
-
-
 
 <style scoped>
 /* Global styles */
@@ -282,6 +309,11 @@ h2 {
   background-color: #ddd;
 }
 
+table tbody tr td:last-child {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 .aksi-buttons {
   display: flex;
 }
@@ -387,5 +419,15 @@ h2 {
 
 .form-group button:hover {
   background-color: #45a049;
+}
+
+.success-message {
+  color: green;
+  margin-top: 10px;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 </style>
