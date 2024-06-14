@@ -1,11 +1,16 @@
-// main.js
 import { createApp } from 'vue';
 import App from './App.vue';
-import router from './router';  // Assuming you've named your router file 'router.js' or 'router.ts'
-import store from './store';    // Assuming you've named your store file 'store.js' or 'store.ts'
-import 'primeicons/primeicons.css';  // Import PrimeIcons styles
+import router from './router';
+import store from './store';
+import axios from 'axios';
+import 'primeicons/primeicons.css';
 
 const app = createApp(App);
+
+const token = localStorage.getItem('token');
+if (token) {
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
 
 app
   .use(router)

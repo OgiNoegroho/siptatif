@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import store from '@/store'; // Import Vuex store
+
 import LayoutPage from '@/components/LayoutPage.vue';
 import HomePage from '@/components/HomePage.vue';
 import ProfilePage from '@/components/ProfilePage.vue';
@@ -20,7 +22,7 @@ const routes = [
     component: LoginPage
   },
   {
-    path: '/Forgot-password',
+    path: '/forgot-password',
     name: 'ForgotPassword',
     component: ForgotPassword
   },
@@ -31,22 +33,22 @@ const routes = [
   },
   {
     path: '/layout',
-    name: 'layout',
+    name: 'Layout',
     component: LayoutPage,
     children: [
       {
-        path: '/Home',
+        path: '/home',
         name: 'Home',
         component: HomePage
       },
       {
         path: '/profile',
-        name: 'profile',
+        name: 'Profile',
         component: ProfilePage 
       },
       {
         path: '/dosen',
-        name: 'DosenPagee',
+        name: 'DosenPage',
         component: DosenPage 
       },
       {
@@ -89,6 +91,21 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(),
   routes
+});
+
+// Define public pages that do not require authentication
+const publicPages = ['Login', 'ForgotPassword', 'Registration'];
+
+// Add navigation guard
+router.beforeEach((to, from, next) => {
+  const isLoggedIn = store.getters['auth/isLoggedIn'];
+  const authRequired = !publicPages.includes(to.name);
+
+  if (authRequired && !isLoggedIn) {
+    return next({ name: 'Login' });
+  }
+
+  next();
 });
 
 export default router;

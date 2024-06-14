@@ -86,11 +86,10 @@ export default {
     return {
       profile: null,
       form: {},
-      showEditPicture: false,
       editMode: false,
       message: '',
       success: false,
-      isLoading: false // New loading state
+      isLoading: false
     };
   },
   created() {
@@ -100,7 +99,7 @@ export default {
     formattedBirthdate() {
       if (!this.profile || !this.profile.birthdate) return '';
       const date = new Date(this.profile.birthdate);
-      return date.toLocaleDateString(); // Formats date to 'MM/DD/YYYY' or 'DD/MM/YYYY' depending on locale
+      return date.toLocaleDateString();
     }
   },
   methods: {
@@ -112,39 +111,62 @@ export default {
       })
       .then(response => {
         this.profile = response.data;
+        this.fetchProfilePicture();
       })
       .catch(error => {
         console.error('Error fetching profile:', error);
         this.showMessage('Error fetching profile.', false);
       });
     },
+    fetchProfilePicture() {
+      axios.get('https://express-mysql-virid.vercel.app/api/user/profile/picture', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        }
+      })
+      .then(response => {
+        this.profile.profile_pic = response.data.profile_pic;
+      })
+      .catch(error => {
+        console.error('Error fetching profile picture:', error);
+        this.showMessage('Error fetching profile picture.', false);
+      });
+    },
     updateProfilePicture(event) {
-  const file = event.target.files[0];
-  const formData = new FormData();
-  formData.append('profile_pic', file);
+      const file = event.target.files[0];
+      if (!file) {
+        this.showMessage('No file selected.', false);
+        return;
+      }
+      const formData = new FormData();
+      formData.append('profile_pic', file);
 
-  axios.put('https://express-mysql-virid.vercel.app/api/user/profile/picture', formData, {
-    headers: {
-      'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      'Content-Type': 'multipart/form-data'
-    }
-  })
-  .then(response => {
-    this.profile.profile_pic = response.data.profilePic.profile_pic;
-    this.showEditPicture = false;
-    this.showMessage('Profile picture updated successfully.', true);
-  })
-  .catch(error => {
-    if (error.response) {
-      console.error('Error response:', error.response);
-    } else if (error.request) {
-      console.error('Error request:', error.request);
-    } else {
-      console.error('Error message:', error.message);
-    }
-    this.showMessage('Error updating profile picture.', false);
-  });
-},
+      axios.post('https://express-mysql-virid.vercel.app/api/user/profile/picture', formData, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Content-Type': 'multipart/form-data'
+        }
+      })
+      .then(response => {
+        this.profile.profile_pic = response.data.profile_pic;
+        this.showMessage('Profile picture updated successfully.', true);
+      })
+      .catch(error => {
+        console.error('Error updating profile picture:', error);
+        let errorMessage = 'Error updating profile picture.';
+        if (error.response) {
+          errorMessage += ` Server responded with status code ${error.response.status}.`;
+          if (error.response.data && error.response.data.message) {
+            errorMessage += ` Message: ${error.response.data.message}`;
+          }
+        } else if (error.request) {
+          errorMessage += ' No response received from server.';
+        } else {
+          errorMessage += ` ${error.message}`;
+        }
+        this.showMessage(errorMessage, false);
+      });
+    },
     triggerFileInput() {
       this.$refs.fileInput.click();
     },
@@ -162,7 +184,7 @@ export default {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         }
       })
-      .then(() => { // No need to use 'response' variable
+      .then(() => {
         this.showMessage('Profile updated successfully.', true);
         this.editMode = false;
         this.fetchProfile(); // Fetch the updated profile data
@@ -202,21 +224,21 @@ export default {
 .profile-pic-container {
   position: relative;
   margin-bottom: 20px;
-  width: 150px; /* Set width of container */
-  height: 150px; /* Set height of container */
-  border-radius: 50%; /* Ensure container is a circle */
-  overflow: hidden; /* Hide overflow from profile picture */
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .profile-pic {
-  width: 100%; /* Ensure profile picture covers the whole container */
-  height: 100%; /* Ensure profile picture covers the whole container */
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   cursor: pointer;
 }
 
 .file-input {
-  display: none; /* Hide file input */
+  display: none;
 }
 
 .profile-details {
@@ -241,7 +263,7 @@ export default {
 .button-container {
   display: flex;
   gap: 10px;
-  margin-top: 20px; /* Add margin-top for spacing */
+  margin-top: 20px;
 }
 
 .edit-button {

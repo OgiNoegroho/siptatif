@@ -135,7 +135,8 @@ export default {
     },
     confirmLogout() {
       this.showLogoutConfirmation = false;
-      this.$router.push({ path: '/' }); // Navigate to logout page or login page
+      this.$store.dispatch('auth/logout');
+      this.$router.push({ path: '/' });
     },
     cancelLogout() {
       this.showLogoutConfirmation = false;

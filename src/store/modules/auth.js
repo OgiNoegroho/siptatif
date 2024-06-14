@@ -47,7 +47,7 @@ export default {
         });
         const data = response.data;
         if (data.success) {
-          commit('setUser', data);
+          commit('setUser', data.user);
         } else {
           console.error('Failed to fetch user:', data.message);
         }
@@ -55,14 +55,18 @@ export default {
         console.error('Error fetching user:', error);
       }
     },
-    async updateUser({ commit }, user) {
+    updateUser({ commit }, user) {
       commit('setUser', user);
+    },
+    logout({ commit }) {
+      commit('clearAuthData');
     }
   },
   mutations: {
     setToken(state, token) {
       state.token = token;
       localStorage.setItem('token', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     },
     setUser(state, user) {
       state.user = user;
@@ -71,6 +75,7 @@ export default {
       state.token = null;
       state.user = null;
       localStorage.removeItem('token');
+      delete axios.defaults.headers.common['Authorization'];
     }
   }
 };
