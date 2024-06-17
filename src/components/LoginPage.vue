@@ -84,7 +84,24 @@ body {
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100vh; /* Change height to viewport height */
+  height: 100vh; 
+}
+
+@media only screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    text-align: center;
+
+  }
+}
+
+@media only screen and (max-width: 768px) {
+  .logo-container {
+    margin-top: 50px;
+    
+    /* Menyembunyikan logo pada tampilan mobile */
+
+  }
 }
 
 .logo-container {
@@ -95,12 +112,15 @@ body {
   align-items: center;
   margin-left: 50px;
   margin-right: 50px;
+  order: -1;
+  margin-bottom: 20px
 }
 
 .logo-img {
-  width: 150px;
+  width: 130px;
   margin-bottom: 20px;
 }
+
 
 h1, h2 {
   color: black;
@@ -121,13 +141,22 @@ h2 {
 
 .form-container {
   background-color: #0A2244;
-  padding: 30px;
+  padding: 40px;
   width: 40%; /* Adjust width */
   max-width: 500px; /* Add max-width */
   border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
   margin-right: 50px; /* Add some margin to the left */
 }
+@media only screen and (max-width: 768px) {
+  .form-container {
+    width: 70%; /* Adjust width for mobile */
+    padding: 30px; /* Adjust padding for mobile */
+    height: 70%;
+    margin-bottom: 600px;
+  }
+}
+
 
 .form-container h1 {
   color: white;

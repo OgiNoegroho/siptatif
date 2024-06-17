@@ -3,7 +3,6 @@
     <div class="btn" :class="{ 'click': isSidebarVisible }" @click="toggleSidebar">
       <i :class="isSidebarVisible ? 'pi pi-times' : 'pi pi-bars'"></i>
     </div>
-
     <nav class="sidebar" :class="{ 'show': isSidebarVisible }">
       <div class="header">
         <img src="@/assets/images/logouin.png" alt="SIPTATIF Logo" class="siptatif-logo" />
@@ -23,7 +22,6 @@
             <router-link to="/mahasiswa">Mahasiswa</router-link>
           </div>
         </li>
-
         <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen' }">
           <div class="menu-item" @click="toggleDropdown('dosen')">
             <i class="pi pi-users"></i>
@@ -32,7 +30,6 @@
               <i :class="activeDropdown === 'dosen' ? 'pi pi-sort-up-fill' : 'pi pi-sort-down-fill'"></i>
             </router-link>
           </div>
-
           <ul class="feat-show" v-if="activeDropdown === 'dosen'">
             <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen-pembimbing' }">
               <router-link to="/dosen-pembimbing">Pembimbing</router-link>
@@ -44,20 +41,18 @@
         </li>
       </ul>
     </nav>
-
     <nav class="navbar">
       <div class="koordinator-text">
         Koordinator TA
       </div>
       <div class="dropdown" @mouseleave="hideDropdown">
-        <img src="@/assets/images/me2.jpg" alt="Profile" class="profile-pic" @click="toggleProfileDropdown" />
+        <img :src="profilePicture" alt="Profile" class="profile-pic" @click="toggleProfileDropdown" />
         <div class="dropdown-content" v-if="showProfileDropdown">
           <router-link to="/profile" class="profile-option">Profile</router-link>
           <a @click="logout" class="profile-option">Logout</a>
         </div>
       </div>
     </nav>
-
     <!-- Logout Confirmation Modal -->
     <div v-if="showLogoutConfirmation" class="logout-modal">
       <div class="modal-content">
@@ -72,6 +67,10 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
+import manImage from '@/assets/images/man.jpeg';
+import womanImage from '@/assets/images/woman.jpeg';
+
 export default {
   data() {
     return {
@@ -83,6 +82,18 @@ export default {
     };
   },
   computed: {
+    ...mapState('auth', ['user']),
+    profilePicture() {
+      if (!this.user) {
+        return null; // Default image
+      }
+      if (this.user.gender === 'Male') {
+        return manImage;
+      } else if (this.user.gender === 'Female') {
+        return womanImage;
+      }
+      return null; // Default image for unexpected values
+    },
     currentRoute() {
       return this.$route.path;
     }
@@ -91,7 +102,6 @@ export default {
     activeDropdown(newValue) {
       if (newValue === 'dosen') {
         this.isDosenDropdownOpen = true;
-        // Directly navigate to DosenPage when the Dosen dropdown is clicked
         this.$router.push('/dosen');
       } else {
         this.isDosenDropdownOpen = false;
@@ -143,9 +153,19 @@ export default {
     }
   },
   created() {
-    this.checkDropdownStatus();
-  }
-};
+  this.$store.dispatch('auth/fetchUser')
+    .then(() => {
+      const user = this.$store.getters['auth/getUser'];
+      if (user) {
+        console.log('User fetched successfully:', user);
+      } else {
+        console.warn('User fetched successfully but is null');
+      }
+    })
+    .catch(error => {
+      console.error('Failed to fetch user:', error);
+    });
+}};
 </script>
 
 <style scoped>

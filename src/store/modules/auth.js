@@ -42,17 +42,19 @@ export default {
       try {
         const response = await axios.get('https://express-mysql-virid.vercel.app/api/user/profile', {
           headers: {
-            'Authorization': `Bearer ${token}`,
-          },
+            'Authorization': `Bearer ${token}`
+          }
         });
+        console.log('API response:', response);  // Log the full response for debugging
         const data = response.data;
-        if (data.success) {
-          commit('setUser', data.user);
+        if (data) {
+          console.log('User data:', data);  // Log user data
+          commit('setUser', data);
         } else {
-          console.error('Failed to fetch user:', data.message);
+          console.error('Failed to fetch user: No user data in response');
         }
       } catch (error) {
-        console.error('Error fetching user:', error);
+        console.error('Error fetching user:', error.response ? error.response.data : error.message);
       }
     },
     updateUser({ commit }, user) {
