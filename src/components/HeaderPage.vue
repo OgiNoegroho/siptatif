@@ -69,23 +69,23 @@ export default {
     },
   },
   created() {
-  this.$store.dispatch('auth/fetchUser')
-    .then(() => {
-      const user = this.$store.getters['auth/getUser'];
-      if (user) {
-        console.log('User fetched successfully:', user);
-      } else {
-        console.warn('User fetched successfully but is null');
-      }
-    })
-    .catch(error => {
-      console.error('Failed to fetch user:', error);
-    });
-}};
+    this.$store.dispatch('auth/fetchUser')
+      .then(() => {
+        const user = this.$store.getters['auth/getUser'];
+        if (user) {
+          console.log('User fetched successfully:', user);
+        } else {
+          console.warn('User fetched successfully but is null');
+        }
+      })
+      .catch(error => {
+        console.error('Failed to fetch user:', error);
+      });
+  }
+};
 </script>
 
 <style scoped>
-/* Add styles specific to the header component */
 .navbar {
   width: 100%;
   background-color: #2F3F57;
@@ -94,6 +94,11 @@ export default {
   display: flex;
   justify-content: flex-end;
   align-items: center;
+  position: fixed; /* Fix the header */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99; /* Adjusted z-index for header */
 }
 
 .koordinator-text {

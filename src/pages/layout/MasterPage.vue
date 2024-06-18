@@ -1,6 +1,6 @@
 <template>
   <div class="app" :class="{ 'sidebar-visible': isSidebarVisible }">
-    <Header />
+    <Header/>
     <div class="content-wrapper">
       <Sidebar @toggleSidebar="toggleSidebar" :isSidebarVisible="isSidebarVisible" />
       <div class="main-content">
@@ -39,9 +39,22 @@ export default {
   height: 100vh;
 }
 
+header {
+  height: 60px; /* Adjust this value based on the height of your header */
+  width: 100%;
+  background-color: #fff; /* Adjust the background color as needed */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: Add a shadow for the header */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Ensure the header is above other content */
+}
+
 .content-wrapper {
   display: flex;
   flex: 1;
+  margin-top: 60px; /* Adjust this value based on the height of your header */
+  width: 100%;
 }
 
 .sidebar-visible .main-content {
@@ -49,9 +62,25 @@ export default {
   transition: margin-left 0.4s ease;
 }
 
+.sidebar-visible .sidebar {
+  left: 0;
+  transition: left 0.4s ease;
+}
+
 .main-content {
   flex: 1;
   padding: 20px; /* Add padding for main content */
   transition: margin-left 0.4s ease;
+  overflow-y: auto; /* Ensure the main content can scroll if it overflows */
+}
+
+.sidebar {
+  top: 0;
+  left: -250px; /* Hide the sidebar by default */
+  width: 250px; /* Adjust this value based on the width of your sidebar */
+  height: 100%;
+  background-color: #333; /* Adjust the background color as needed */
+  z-index: 2000; /* Ensure the sidebar is above the header */
+  transition: left 0.4s ease;
 }
 </style>

@@ -97,13 +97,14 @@ export default {
 
 .btn {
   color: white;
-  position: absolute;
+  position: fixed; /* Changed from absolute to fixed */
   top: 20px;
   left: 50px;
   text-align: center;
   border-radius: 2px;
   cursor: pointer;
   transition: left 0.4s ease;
+  z-index: 101; /* Adjusted z-index for button */
 }
 
 .btn.click {
@@ -127,6 +128,7 @@ export default {
   left: -250px;
   background: #2F3F57;
   transition: left 0.4s ease;
+  z-index: 100; /* Adjusted z-index for sidebar */
 }
 
 .show {

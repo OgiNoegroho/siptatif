@@ -54,6 +54,22 @@
               </p>
             </div>
           </div>
+          <div class="calon-penguji">
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>Dosen Penguji 1:</strong>
+                <span v-if="selectedMahasiswa.Penguji1">{{ selectedMahasiswa.Penguji1 }}</span>
+                <span v-else>-</span>
+              </p>
+            </div>
+            <div class="inline-item">
+              <p class="detail-info">
+                <strong>Dosen Penguji 2:</strong>
+                <span v-if="selectedMahasiswa.Penguji2">{{ selectedMahasiswa.Penguji2 }}</span>
+                <span v-else>-</span>
+              </p>
+            </div>
+          </div>
           <div class="berkas-catatan">
             <div class="inline-item">
               <p class="detail-info">
@@ -330,7 +346,7 @@ export default {
   border-radius: 4px;
 }
 
-.basic-details, .calon-pembimbing, .berkas-catatan {
+.basic-details, .calon-pembimbing, .calon-pembimbing, .berkas-catatan {
   display: flex;
   flex-wrap: wrap;
   margin-bottom: 15px;
