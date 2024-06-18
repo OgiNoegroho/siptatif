@@ -1,5 +1,8 @@
 import axios from 'axios';
 
+// Set Axios default base URL
+axios.defaults.baseURL = 'https://express-mysql-virid.vercel.app/api';
+
 export default {
   namespaced: true,
   state: {
@@ -13,25 +16,26 @@ export default {
   actions: {
     login({ commit }, userData) {
       return new Promise((resolve, reject) => {
-        axios.post('https://express-mysql-virid.vercel.app/api/user/login', userData)
+        axios.post('/user/login', userData)
           .then(response => {
             const token = response.data.token;
             commit('setToken', token);
+            commit('setUser', response.data.user);
             resolve();
           })
           .catch(error => {
-            reject(error);
+            reject(error.response ? error.response.data : error.message);
           });
       });
     },
     register(_, userData) {
       return new Promise((resolve, reject) => {
-        axios.post('https://express-mysql-virid.vercel.app/api/user/register', userData)
+        axios.post('/user/register', userData)
           .then(() => {
             resolve();
           })
           .catch(error => {
-            reject(error);
+            reject(error.response ? error.response.data : error.message);
           });
       });
     },
@@ -40,19 +44,12 @@ export default {
       if (!token) return;
 
       try {
-        const response = await axios.get('https://express-mysql-virid.vercel.app/api/user/profile', {
+        const response = await axios.get('/user/profile', {
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
-        console.log('API response:', response);  // Log the full response for debugging
-        const data = response.data;
-        if (data) {
-          console.log('User data:', data);  // Log user data
-          commit('setUser', data);
-        } else {
-          console.error('Failed to fetch user: No user data in response');
-        }
+        commit('setUser', response.data);
       } catch (error) {
         console.error('Error fetching user:', error.response ? error.response.data : error.message);
       }

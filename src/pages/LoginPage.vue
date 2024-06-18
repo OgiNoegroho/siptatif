@@ -47,7 +47,7 @@ export default {
         await store.dispatch('auth/login', loginData.value);
         router.push('/Home'); // Redirect to home page
       } catch (error) {
-        loginMessage.value = 'An error occurred during login.';
+        loginMessage.value = error.message || 'An error occurred during login.';
         console.error('Error logging in:', error);
       } finally {
         isLoading.value = false;
@@ -63,6 +63,7 @@ export default {
   }
 };
 </script>
+
 
 
 <style scoped>
