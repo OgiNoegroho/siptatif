@@ -182,96 +182,45 @@ export default {
 
 .profile-pic-container {
   position: relative;
-  margin-bottom: 20px;
-  width: 150px; /* Set width of container */
-  height: 150px; /* Set height of container */
-  border-radius: 50%; /* Ensure container is a circle */
-  overflow: hidden; /* Hide overflow from profile picture */
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .profile-pic {
-  width: 100%; /* Ensure profile picture covers the whole container */
-  height: 100%; /* Ensure profile picture covers the whole container */
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  cursor: pointer;
-}
-
-/* Add emboss effect on profile picture */
-.profile-pic-container:before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  border-radius: 50%; /* Ensure emboss effect is circular */
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.3),
-    rgba(255, 255, 255, 0)
-  );
-  z-index: 1;
-}
-
-
-.file-input {
-  display: none; /* Hide file input */
 }
 
 .profile-details {
-  border: 1px solid #ccc; /* Menetapkan border dengan ketebalan 1px */
-  padding: 10px;
-  border-radius: 8px;
-  width: 500px; /* Menetapkan lebar profile detail */
-  margin: center; /* Mengatur agar profile detail berada di tengah */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Menambahkan shadow */
-  background-color: #ffffff; /* Memberi warna latar belakang untuk efek emboss */
+  text-align: left;
+  margin-bottom: 20px;
 }
 
 .profile-details div {
-  display: flex; /* Menggunakan flexbox untuk mengatur posisi label dan nilai */
-  justify-content: left; /* Memastikan label dan nilai sejajar rata kanan */
   margin-bottom: 10px;
 }
 
 .profile-details label {
   font-weight: bold;
+  margin-right: 10px;
 }
 
 .profile-details input,
 .profile-details select {
-  flex: 1; /* Membuat input dan select memenuhi ruang yang tersedia */
   margin-left: 10px;
 }
 
-/* Efek emboss pada border */
-.profile-details:before {
-  content: '';
-  position: absolute;
-  top: -1px;
-  left: -1px;
-  right: -1px;
-  bottom: -1px;
-  border-radius: 5px;
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.2),
-    rgba(255, 255, 255, 0)
-  );
-  z-index: -1;
-}
-
-
 .button-container {
   display: flex;
-  justify-content: center;
   gap: 10px;
-  margin-top: 20px; /* Add margin-top for spacing */
+  margin-top: 20px;
 }
 
 .edit-button {
-  background-color: #240750;
+  background-color: #007bff;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -280,16 +229,13 @@ export default {
 }
 
 .edit-button:disabled {
-  background-color: #A1DD70;
+  background-color: #6c757d;
   cursor: not-allowed;
 }
 
 .edit-button:hover:not(:disabled) {
-  background-color: #A1DD70;
-  transition: transform 0.8s ease;
-  transform: scale(1.1);
+  background-color: #0056b3;
 }
-
 
 .modal {
   position: fixed;
@@ -311,28 +257,6 @@ export default {
   max-width: 500px;
   width: 100%;
   position: relative;
-}
-
-.modal-details {
-  display: flex; /* Use flex to align items */
-  align-items: center; /* Center vertically */
-  margin-bottom: 10px; /* Space between rows */
-}
-
-.modal-details label {
-  font-weight: bold;
-  flex: 0 0 100px; /* Set a fixed width for labels */
-  text-align: left; /* Left align label text */
-}
-
-.modal-details input,
-.modal-details select {
-  flex: 1; /* Inputs take up the remaining space */
-}
-
-.button-container.centered {
-  display: flex;
-  justify-content: center;
 }
 
 .close-button {

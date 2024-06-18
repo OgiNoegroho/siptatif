@@ -1,19 +1,19 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import store from '@/store'; // Import Vuex store
 
-import LayoutPage from '@/components/LayoutPage.vue';
-import HomePage from '@/components/HomePage.vue';
-import ProfilePage from '@/components/ProfilePage.vue';
-import DosenPembimbing from '@/components/DosenPembimbing.vue';
-import DetailPembimbing from '@/components/DetailPembimbing.vue';
-import DosenPenguji from '@/components/DosenPenguji.vue';
-import DetailPenguji from '@/components/DetailPenguji.vue';
-import FileMahasiswa from '@/components/FileMahasiswa.vue';
-import LoginPage from '@/components/LoginPage.vue';
-import ForgotPassword from '@/components/ForgotPassword.vue';
-import MahasiswaPage from '@/components/MahasiswaPage.vue';
-import RegistrationPage from '@/components/RegistrationPage.vue';
-import DosenPage from '@/components/DosenPage.vue';
+import MasterPage from '@/pages/layout/MasterPage.vue';
+import HomePage from '@/pages/HomePage.vue';
+import ProfilePage from '@/pages/ProfilePage.vue';
+import DosenPembimbing from '@/pages/DosenPembimbing.vue';
+import DetailPembimbing from '@/pages/DetailPembimbing.vue';
+import DosenPenguji from '@/pages/DosenPenguji.vue';
+import DetailPenguji from '@/pages/DetailPenguji.vue';
+import FileMahasiswa from '@/pages/FileMahasiswa.vue';
+import LoginPage from '@/pages/LoginPage.vue';
+import ForgotPassword from '@/pages/ForgotPassword.vue';
+import MahasiswaPage from '@/pages/MahasiswaPage.vue';
+import RegistrationPage from '@/pages/RegistrationPage.vue';
+import DosenPage from '@/pages/DosenPage.vue';
 
 const routes = [
   {
@@ -34,7 +34,7 @@ const routes = [
   {
     path: '/layout',
     name: 'Layout',
-    component: LayoutPage,
+    component: MasterPage,
     children: [
       {
         path: '/home',
