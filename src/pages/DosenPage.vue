@@ -39,30 +39,46 @@
     </button>
 
     <!-- Table to display dosen -->
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Nama Dosen</th>
-          <th>NIP</th>
-          <th>Jenis Kelamin</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(dosen, index) in dosenList" :key="index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ dosen.Nama }}</td> <!-- Display nama of the dosen -->
-          <td>{{ dosen.NIP }}</td> <!-- Display NIP of the dosen -->
-          <td>{{ dosen.JenisKelamin }}</td> <!-- Display JenisKelamin of the dosen -->
-          <td>
-            <!-- Buttons for edit, delete, and detail actions -->
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nama Dosen</th>
+            <th>NIP</th>
+            <th>Jenis Kelamin</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(dosen, index) in dosenList" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ dosen.Nama }}</td>
+            <td>{{ dosen.NIP }}</td>
+            <td>{{ dosen.JenisKelamin }}</td>
+            <td>
+              <button class="btttn tombol-edit" @click="editDosen(index)">Edit</button>
+              <button class="btttn tombol-delete" @click="confirmDelete(dosen.NIP, index)">Hapus</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Card layout for mobile -->
+    <div class="card-layout">
+      <div v-for="(dosen, index) in dosenList" :key="index" class="card">
+        <div class="card-content">
+          <h3>{{ dosen.Nama }}</h3>
+          <p><strong>NIP:</strong> {{ dosen.NIP }}</p>
+          <p><strong>Jenis Kelamin:</strong> {{ dosen.JenisKelamin }}</p>
+          <div class="card-actions">
             <button class="btttn tombol-edit" @click="editDosen(index)">Edit</button>
             <button class="btttn tombol-delete" @click="confirmDelete(dosen.NIP, index)">Hapus</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -231,74 +247,40 @@ h2 {
   margin-left: 20px;
 }
 
-/* Styles for card layout */
-.card-container {
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
+.table-wrapper {
+  display: none;
 }
 
-.card {
-  background-color: #fff;
+table {
+  width: 96.5%;
+  max-width: 2000px;
+  border-collapse: collapse;
+  margin: 20px auto;
+}
+
+table th,
+table td {
   border: 1px solid #ddd;
-  border-radius: 8px;
-  margin-bottom: 15px;
-  padding: 15px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 8px;
+  text-align: left;
 }
 
-.card-header {
-  font-size: 18px;
-  font-weight: 600;
+table th {
+  background-color: #f2f2f2;
 }
 
-.card-body {
-  margin-top: 10px;
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
 }
 
-.card-footer {
+table tr:hover {
+  background-color: #ddd;
+}
+
+table tbody tr td:last-child {
   display: flex;
-  justify-content: flex-end;
-  margin-top: 10px;
-}
-
-.card-footer .btttn {
-  margin-left: 5px;
-}
-
-/* Table styles (for desktop view) */
-@media (min-width: 768px) {
-  table {
-    width: 96.5%;
-    max-width: 2000px;
-    border-collapse: collapse;
-    margin: 20px auto; /* Center the table */
-  }
-
-  table th,
-  table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-
-  table th {
-    background-color: #f2f2f2;
-  }
-
-  table tr:nth-child(even) {
-    background-color: #f2f2f2;
-  }
-
-  table tr:hover {
-    background-color: #ddd;
-  }
-
-  table tbody tr td:last-child {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+  justify-content: center;
+  align-items: center;
 }
 
 .btttn {
@@ -327,11 +309,6 @@ h2 {
 
 .tombol-edit {
   background-color: #FFC107;
-  color: white;
-}
-
-.tombol-detail {
-  background-color: #2196F3;
   color: white;
 }
 
@@ -396,6 +373,13 @@ h2 {
   font-size: 14px;
 }
 
+.tambah-button {
+  background-color: #4CAF50;
+  color: white;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+
 .message {
   margin: 20px;
   padding: 10px;
@@ -411,5 +395,47 @@ h2 {
 .error {
   background-color: #f44336;
   color: white;
+}
+
+.card-layout {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.card {
+  background-color: #fff;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 300px;
+}
+
+.card-content h3 {
+  margin-bottom: 10px;
+}
+
+.card-content p {
+  margin: 5px 0;
+}
+
+.card-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+@media screen and (min-width: 769px) {
+  .card-layout {
+    display: none;
+  }
+  
+  .table-wrapper {
+    display: block;
+  }
 }
 </style>

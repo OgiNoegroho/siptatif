@@ -28,20 +28,20 @@
             <a>Dosen</a>
           </div>
           <ul class="feat-show" v-if="activeDropdown === 'dosen'">
-            <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen' }">
-              <div class="menu-item dropdown-item">
+            <li @click.stop="handleDosenDropdownClick('/dosen')" :class="{ 'active': currentRoute === '/dosen' }">
+              <div class="menu-item">
                 <i class='bx bxs-user-detail'></i>
                 <router-link to="/dosen">Semua Dosen</router-link>
               </div>
             </li>
-            <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen-pembimbing' }">
-              <div class="menu-item dropdown-item">
+            <li @click.stop="handleDosenDropdownClick('/dosen-pembimbing')" :class="{ 'active': currentRoute === '/dosen-pembimbing' }">
+              <div class="menu-item">
                 <i class='bx bx-user-check'></i>
                 <router-link to="/dosen-pembimbing">Pembimbing</router-link>
               </div>
             </li>
-            <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/dosen-penguji' }">
-              <div class="menu-item dropdown-item">
+            <li @click.stop="handleDosenDropdownClick('/dosen-penguji')" :class="{ 'active': currentRoute === '/dosen-penguji' }">
+              <div class="menu-item">
                 <i class='bx bx-user-voice' ></i>
                 <router-link to="/dosen-penguji">Penguji</router-link>
               </div>
@@ -124,7 +124,7 @@ body {
   color: white;
   position: fixed; /* Changed from absolute to fixed */
   size: 120%;
-  top: 20px;
+  top: 27px;
   left: 40px;
   text-align: center;
   border-radius: 2px;
@@ -218,12 +218,12 @@ nav ul li.active-dropdown a {
 }
 
 .menu-item i {
-  margin-right: 5px; /* Add margin to the right of the icons */
+  margin-right: 20px; /* Add margin to the right of the icons */
   margin-left: 20px;  /* Add margin to the left of the icons */
 }
 
 .dropdown-item {
-  padding-left: 20px; /* Adjust padding for dropdown items */
+  padding-left: 5px; /* Adjust padding for dropdown items */
   font-size: 15px; /* Adjust font size for dropdown items */
 }
 
@@ -269,20 +269,21 @@ nav ul li.active-dropdown a {
   }
 
   .menu-item i {
-    margin: 0;
+    margin-right: 20px; /* Add margin to the right of the icons */
+  margin-left: 20px; ;
   }
 
   .dropdown-item {
-    padding-left: 10px; /* Adjust padding for dropdown items */
-    font-size: 12px; /* Adjust font size for dropdown items */
+    padding-left: 5px; /* Adjust padding for dropdown items */
+  font-size: 15px; /* Adjust font size for dropdown items */
   }
 
   .btn {
-    left: 10px;
+    left: 25px;
   }
 
   .btn.click {
-    left: 80px;
+    left: 100px;
   }
 }
 </style>
