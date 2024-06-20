@@ -70,7 +70,7 @@
               </p>
             </div>
           </div>
-          <div class="berkas-catatan">
+          <!--<div class="berkas-catatan">
             <div class="inline-item">
               <p class="detail-info">
                 <strong>Berkas:</strong>
@@ -87,7 +87,7 @@
                 </span>
               </p>
             </div>
-          </div>
+          </div>-->
           <div class="form-group">
             <select v-model="selectedStatus">
               <option v-for="option in statusOptions" :key="option" :value="option">{{ option }}</option>
