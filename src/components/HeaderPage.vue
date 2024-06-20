@@ -3,8 +3,9 @@
     <div class="koordinator-text">
       Koordinator TA
     </div>
-    <div class="dropdown" @mouseleave="hideDropdown">
+    <div class="dropdown">
       <img :src="profilePicture" alt="Profile" class="profile-pic" @click="toggleProfileDropdown" />
+      <i :class="showProfileDropdown ? 'pi pi-sort-up-fill' : 'pi pi-sort-down-fill'" class="profile-icon" @click="toggleProfileDropdown"></i>
       <div class="dropdown-content" v-if="showProfileDropdown">
         <router-link to="/profile" class="profile-option">Profile</router-link>
         <a @click="logout" class="profile-option">Logout</a>
@@ -52,9 +53,18 @@ export default {
   methods: {
     toggleProfileDropdown() {
       this.showProfileDropdown = !this.showProfileDropdown;
+      if (this.showProfileDropdown) {
+        document.addEventListener('click', this.handleClickOutside);
+      } else {
+        document.removeEventListener('click', this.handleClickOutside);
+      }
     },
-    hideDropdown() {
+    handleClickOutside(event) {
+      if (this.$el.contains(event.target)) {
+        return;
+      }
       this.showProfileDropdown = false;
+      document.removeEventListener('click', this.handleClickOutside);
     },
     logout() {
       this.showLogoutConfirmation = true;
@@ -81,16 +91,19 @@ export default {
       .catch(error => {
         console.error('Failed to fetch user:', error);
       });
-  }
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.handleClickOutside);
+  },
 };
 </script>
 
 <style scoped>
 .navbar {
   width: 100%;
-  background-color: #2F3F57;
-  padding: 8px 20px;
-  height: 65px;
+  background: linear-gradient(to right, rgb(10, 34, 68), rgb(29, 53, 87), rgb(69, 123, 157));
+  padding: 8px 0.1px;
+  height: 57.5px;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -104,44 +117,55 @@ export default {
 .koordinator-text {
   color: white;
   font-size: 16px;
-  margin-right: 20px;
+  margin-right: 30px;
 }
 
 .profile-pic {
   margin-top: 8px;
+  margin-right: 10px;
   border-radius: 50%;
   height: 40px;
   width: 40px;
   cursor: pointer;
 }
 
+.dropdown {
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px;
+  position: relative;
+}
+
+.profile-icon {
+  margin-top: 10px;
+  cursor: pointer;
+}
+
 .dropdown-content {
-  display: none;
+  margin-top: 18px;
   position: absolute;
   background-color: white;
   border: 1px solid black;
-  min-width: 160px;
+  width: 150px; /* Adjust width to make it box-like */
   z-index: 1;
   top: 45px;
-  right: 0;
-  border-radius: 5px;
+  right: -8px;
+  border-radius: 5px; /* Adjust radius for a box shape */
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
 }
 
-.dropdown-content a {
+.dropdown-content .profile-option {
   color: black;
   padding: 12px 16px;
   text-decoration: none;
-  text-align: center;
+  text-align: left; /* Align text to the left */
   display: block;
 }
 
-.dropdown-content a:hover {
-  border-radius: 5px;
+.dropdown-content .profile-option:hover {
   background-color: #ddd;
-}
-
-.dropdown:hover .dropdown-content {
-  display: block;
 }
 
 .logout-modal {
@@ -172,5 +196,11 @@ export default {
   margin: 0 10px;
   padding: 10px 20px;
   cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .koordinator-text {
+    display: none;
+  }
 }
 </style>

@@ -1,6 +1,5 @@
 import axios from 'axios';
 
-// Set Axios default base URL
 axios.defaults.baseURL = 'https://express-mysql-virid.vercel.app/api';
 
 export default {

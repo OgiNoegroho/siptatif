@@ -1,10 +1,20 @@
 <template>
-  <div class="login-container">
-    <h1>Lupa Password</h1>
-    <h5>Anda Lupa dengan Password Anda?</h5>
-    <input type="email" v-model="email" class="email-input" placeholder="Masukkan Email">
-    <button @click="sendRecoveryLink" class="forgot-password-link">Kirimkan Link Pemulihan</button>
-    <p><router-link to="/" class="back-to-login-link">Login Kembali</router-link></p>
+  <div class="container">
+    <div v-if="!isResettingPassword" class="reset-password-container">
+      <h1>Lupa Password</h1>
+      <h5>Anda Lupa dengan Password Anda?</h5>
+      <input type="email" v-model="email" class="input-field" placeholder="Masukkan Email">
+      <button @click="sendRecoveryLink" class="button">Kirimkan Link Pemulihan</button>
+      <p><router-link to="/" class="back-to-login-link">Login Kembali</router-link></p>
+      <p v-if="message" :class="messageClass">{{ message }}</p>
+    </div>
+    
+    <div v-else class="reset-password-container">
+      <h1>Reset Password</h1>
+      <input type="password" v-model="newPassword" class="input-field" placeholder="Masukkan Password Baru">
+      <button @click="resetPassword" class="button">Reset Password</button>
+      <p v-if="message" :class="messageClass">{{ message }}</p>
+    </div>
   </div>
 </template>
 
@@ -12,14 +22,83 @@
 export default {
   data() {
     return {
-      email: ''
+      email: '',
+      newPassword: '',
+      message: '',
+      messageClass: '',
+      isResettingPassword: false,
+      token: ''
     };
   },
   methods: {
-    sendRecoveryLink() {
-      // Handle sending recovery link logic here, e.g., send email to the provided email
-      console.log('Email:', this.email);
-      // Redirect or handle recovery link logic
+    async sendRecoveryLink() {
+      if (!this.email) {
+        this.message = 'Please enter a valid email address.';
+        this.messageClass = 'error-message';
+        return;
+      }
+
+      try {
+        const response = await fetch('https://express-mysql-virid.vercel.app/api/user/request-password-reset', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ email: this.email })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          this.token = data.token;
+          this.isResettingPassword = true;
+          this.message = 'Please enter your new password.';
+          this.messageClass = 'success-message';
+        } else {
+          this.message = data.message || 'An error occurred while sending the recovery link.';
+          this.messageClass = 'error-message';
+        }
+      } catch (error) {
+        console.error('Error sending recovery link:', error);
+        this.message = 'An error occurred while sending the recovery link.';
+        this.messageClass = 'error-message';
+      }
+    },
+    async resetPassword() {
+      if (!this.newPassword) {
+        this.message = 'Please enter a new password.';
+        this.messageClass = 'error-message';
+        return;
+      }
+
+      try {
+        const response = await fetch('https://express-mysql-virid.vercel.app/api/user/reset-password', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ token: this.token, newPassword: this.newPassword })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          this.message = 'Password has been reset successfully!';
+          this.messageClass = 'success-message';
+          
+          // Redirect to the login page after a short delay
+          setTimeout(() => {
+            this.$router.push('/');
+          }, 2000); // 2 second delay before redirecting
+        } else {
+          this.message = data.message || 'An error occurred while resetting the password.';
+          this.messageClass = 'error-message';
+        }
+      } catch (error) {
+        console.error('Error resetting password:', error);
+        this.message = 'An error occurred while resetting the password.';
+        this.messageClass = 'error-message';
+      }
     }
   }
 }
@@ -30,7 +109,7 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-.login-container {
+.container {
   width: 300px;
   margin: 0 auto;
   padding: 100px;
@@ -39,22 +118,20 @@ body {
   margin-top: 150px;
 }
 
-.login-container h1{
+.reset-password-container h1 {
   text-align: center;
   margin-bottom: 18px;
-  color:#0A2244;
+  color: #0A2244;
 }
 
-.email-input {
-
+.input-field {
   width: 90%;
   padding: 10px;
   border-radius: 10px;
-  margin: 30px 0 30px 0;
-
+  margin: 30px 0;
 }
 
-.forgot-password-link {
+.button {
   display: block;
   width: 100%;
   padding: 10px;
@@ -73,5 +150,29 @@ body {
   text-align: center;
   text-decoration: none;
   color: #5F7A2F;
+}
+
+.success-message {
+  color: #28a745;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  margin-top: 15px;
+  font-size: 16px;
+  font-weight: bold;
 }
 </style>

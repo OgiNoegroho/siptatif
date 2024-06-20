@@ -2,26 +2,42 @@
   <div>
     <h2>Data Dosen Pembimbing</h2>
 
-    <table>
-      <thead>
-        <tr>
-          <th>No</th>
-          <th>Nama Dosen</th>
-          <th>NIP</th>
-          <th>Aksi</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(dosen, index) in dosenList" :key="index">
-          <td>{{ index + 1 }}</td>
-          <td>{{ dosen.nama_pembimbing }}</td>
-          <td>{{ dosen.nip_pembimbing }}</td>
-          <td>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Nama Dosen</th>
+            <th>NIP</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(dosen, index) in dosenList" :key="index">
+            <td>{{ index + 1 }}</td>
+            <td>{{ dosen.nama_pembimbing }}</td>
+            <td>{{ dosen.nip_pembimbing }}</td>
+            <td>
+              <button class="btttn tombol-detail" @click="showDetail(dosen)">Detail</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="card-wrapper">
+        <div class="card" v-for="(dosen, index) in dosenList" :key="index">
+          <div class="card-header">
+            <span>No: {{ index + 1 }}</span>
+          </div>
+          <div class="card-body">
+            <p><strong>Nama Dosen:</strong> {{ dosen.nama_pembimbing }}</p>
+            <p><strong>NIP:</strong> {{ dosen.nip_pembimbing }}</p>
+          </div>
+          <div class="card-footer">
             <button class="btttn tombol-detail" @click="showDetail(dosen)">Detail</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -77,19 +93,15 @@ h2 {
   text-transform: capitalize;
 }
 
-h3 {
-  text-align: center;
-  margin-bottom: 15px;
-  text-transform: capitalize;
+.table-wrapper {
+  width: 100%;
 }
 
 table {
-  width: 96.5%;
-  max-width: 1500px;
+  width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  margin-left: 20px;
-  margin-right: 20px;
+  align-items: center;
 }
 
 table th,
@@ -119,8 +131,6 @@ table tbody tr td:last-child {
 
 .btttn {
   padding: 8px 12px;
-  margin-left: 20px;
-  margin-right: 20px;
   cursor: pointer;
   border: none;
   border-radius: 10px;
@@ -129,18 +139,41 @@ table tbody tr td:last-child {
   text-decoration: none;
 }
 
-.icon {
-  margin-right: 5px;
-  font-size: 14px;
-  color: white;
-}
-
 .tombol-detail {
   background-color: #2196F3;
   color: white;
 }
 
-.tombol-detail {
-  margin: 0 5px;
+.card-wrapper {
+  display: none;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  margin: 10px 0;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header,
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-body p {
+  margin: 10px 0;
+}
+
+@media screen and (max-width: 768px) {
+  table {
+    display: none;
+  }
+  .card-wrapper {
+    display: block;
+  }
 }
 </style>

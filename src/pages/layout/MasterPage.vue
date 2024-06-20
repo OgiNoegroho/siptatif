@@ -53,12 +53,12 @@ header {
 .content-wrapper {
   display: flex;
   flex: 1;
-  margin-top: 60px; /* Adjust this value based on the height of your header */
+  margin-top: 80px; /* Adjust this value based on the height of your header */
   width: 100%;
 }
 
 .sidebar-visible .main-content {
-  margin-left: 250px; /* Adjust this value based on the width of your sidebar */
+  margin-left: 200px; /* Adjust this value based on the width of your sidebar */
   transition: margin-left 0.4s ease;
 }
 
@@ -69,7 +69,7 @@ header {
 
 .main-content {
   flex: 1;
-  padding: 20px; /* Add padding for main content */
+  padding: 5px; /* Add padding for main content */
   transition: margin-left 0.4s ease;
   overflow-y: auto; /* Ensure the main content can scroll if it overflows */
 }
@@ -77,10 +77,16 @@ header {
 .sidebar {
   top: 0;
   left: -250px; /* Hide the sidebar by default */
-  width: 250px; /* Adjust this value based on the width of your sidebar */
-  height: 100%;
+  width: 25px; /* Adjust this value based on the width of your sidebar */
   background-color: #333; /* Adjust the background color as needed */
   z-index: 2000; /* Ensure the sidebar is above the header */
   transition: left 0.4s ease;
+}
+
+@media (max-width: 768px) {
+  .sidebar-visible .main-content {
+  margin-left: 70px; /* Adjust this value based on the width of your sidebar */
+  transition: margin-left 0.4s ease;
+}
 }
 </style>

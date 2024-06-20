@@ -6,6 +6,8 @@
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <span class="close-btn" @click="closeModal">&times;</span>
+        <br>
+        <br>
         <h3>Tambah Data Mahasiswa</h3>
         <form id="formTambahDataModal" class="form-container" @submit.prevent="tambahData">
           <div class="form-group">
@@ -65,7 +67,7 @@
 
     <!-- Button to open modal -->
     <button class="btttn tambah-button" @click="openModal">
-      <i class="pi pi-plus-circle icon"></i> Tambah Data Mahasiswa
+      <i class="pi pi-plus-circle icon"></i> Data Mahasiswa
     </button>
 
     <!-- Success/Error Message -->
@@ -110,6 +112,25 @@
         </tr>
       </tbody>
     </table>
+
+    <!-- Card Layout for Mobile View -->
+    <div class="card-container" v-for="(mahasiswa, index) in mahasiswaList" :key="mahasiswa.nim">
+      <div class="card">
+        <div class="card-content">
+          <p><strong>No:</strong> {{ index + 1 }}</p>
+          <p><strong>Tanggal:</strong> {{ mahasiswa.tanggal }}</p>
+          <p><strong>Nama:</strong> {{ mahasiswa.nama }}</p>
+          <p><strong>NIM:</strong> {{ mahasiswa.nim }}</p>
+          <p><strong>Email:</strong> {{ mahasiswa.email }}</p>
+          <p><strong>Judul:</strong> {{ mahasiswa.judul }}</p>
+          <p><strong>Status:</strong> {{ mahasiswa.status }}</p>
+          <div class="aksi-buttons">
+            <button class="btttn tombol-detail" @click="showDetail(mahasiswa)">Detail</button>
+            <button class="btttn tombol-delete" @click="confirmDelete(mahasiswa)">Hapus</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -203,7 +224,9 @@ export default {
           if (index !== -1) {
             this.mahasiswaList.splice(index, 1);
           }
+          this.successMessage = 'Data mahasiswa berhasil dihapus';
         } catch (error) {
+          this.errorMessage = 'Terjadi kesalahan saat menghapus data mahasiswa';
           console.error('Error deleting data:', error);
         }
       } else {
@@ -275,7 +298,7 @@ export default {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Arial', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 h2 {
@@ -314,6 +337,7 @@ table tbody tr td:last-child {
   justify-content: center;
   align-items: center;
 }
+
 .aksi-buttons {
   display: flex;
 }
@@ -351,7 +375,7 @@ table tbody tr td:last-child {
   justify-content: center;
   align-items: center;
   position: fixed;
-  z-index: 1;
+  z-index: 1002;
   left: 0;
   top: 0;
   width: 100%;
@@ -370,15 +394,17 @@ table tbody tr td:last-child {
 }
 
 .close-btn {
-  color: #aaa;
+  color: #030303;
   float: right;
+  margin-bottom: 20px;
+  margin-left: 20px;
   font-size: 28px;
   font-weight: bold;
 }
 
 .close-btn:hover,
 .close-btn:focus {
-  color: black;
+  color: rgb(241, 4, 4);
   text-decoration: none;
   cursor: pointer;
 }
@@ -429,5 +455,40 @@ table tbody tr td:last-child {
 .error-message {
   color: red;
   margin-top: 10px;
+}
+
+/* Card styles */
+.card-container {
+  display: none;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin: 10px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-content p {
+  margin: 8px 0;
+}
+
+.card .aksi-buttons {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 10px;
+}
+
+/* Media query for mobile view */
+@media (max-width: 768px) {
+  .mahasiswa-table {
+    display: none;
+  }
+
+  .card-container {
+    display: block;
+  }
 }
 </style>

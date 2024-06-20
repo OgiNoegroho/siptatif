@@ -1,11 +1,13 @@
 <template>
-  <div class="container">
-    <div class="logo-container">
-      <img src="@/assets/images/logouin.png" alt="SIPTATIF Logo" class="logo-img">
-      <h1>SIPTATIF</h1>
-      <h2>Sistem Informasi Pendaftaran Tugas Akhir Mahasiswa Teknik Informatika</h2>
-    </div>
+  <div class="container-gradient-background">
     <div class="form-container">
+      <div class="logo-title-container">
+        <img src="@/assets/images/logouin.png" alt="SIPTATIF Logo" class="logo-img">
+        <br>
+        <h2 class="animated-text">Sistem Informasi Pengajuan Tugas Akhir</h2>
+        <h2 class="animated-text">Teknik Informatika</h2>
+      </div>
+      <br>
       <h1>Login</h1>
       <form @submit.prevent="login">
         <label for="email">Masukkan Email Anda</label>
@@ -19,7 +21,10 @@
             <span v-if="isLoading">Loading...</span>
             <span v-else>Login</span>
           </button>
-          <router-link to="/registration" class="register-button">Buat Akun</router-link>
+        </div>   
+        <div class="divider"><span>or</span></div>
+        <div class="button-container">
+          <router-link to="/registration" class="register-button">Create Account</router-link>
         </div>
       </form>
       <p v-if="loginMessage" class="error-message">{{ loginMessage }}</p>
@@ -47,7 +52,7 @@ export default {
         await store.dispatch('auth/login', loginData.value);
         router.push('/Home'); // Redirect to home page
       } catch (error) {
-        loginMessage.value = error.message || 'An error occurred during login.';
+        loginMessage.value = 'An error occurred during login.';
         console.error('Error logging in:', error);
       } finally {
         isLoading.value = false;
@@ -64,147 +69,147 @@ export default {
 };
 </script>
 
-
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
-body {
+html, body {
   margin: 0;
   padding: 0;
-  font-family: 'Poppins', sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: #234D20 !important;
-}
-
-.container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  height: 100%;
   width: 100%;
-  height: 100vh; 
+  font-family: 'Poppins', sans-serif;
 }
 
-@media only screen and (max-width: 768px) {
-  .container {
-    flex-direction: column;
-    text-align: center;
-
-  }
-}
-
-@media only screen and (max-width: 768px) {
-  .logo-container {
-    margin-top: 50px;
-    
-    /* Menyembunyikan logo pada tampilan mobile */
-
-  }
-}
-
-.logo-container {
-  flex: 1;
+body {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-left: 50px;
-  margin-right: 50px;
-  order: -1;
-  margin-bottom: 20px
+  background: #000000 !important;
+  overflow: hidden; /* Ensure no scrolling */
+}
+
+.container-gradient-background {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background: linear-gradient(180deg, #0A2244, #1d3557, #457b9d, #f1faee);
+  background-size: 100% 300%;
+  animation: gradient-animation 5s ease infinite alternate-reverse;
+  width: 100%;
+  height: 100%;
+  position:absolute;/* Use absolute positioning */
+  top: 0;
+  left: 0;
+  right: 100px;
+  z-index: -1;
+}
+
+@keyframes gradient-animation {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
+
+@keyframes fadeInSlideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+.animated-text {
+  display: inline-block;
+  font-size: 16px;
+  animation: fadeInSlideUp 4s ease-in-out infinite;
+}
+
+.logo-title-container {
+  text-align: center;
+  margin-bottom: 20px; /* Reduced margin */
 }
 
 .logo-img {
-  width: 130px;
-  margin-bottom: 20px;
-}
-
-
-h1, h2 {
-  color: black;
-}
-
-h1 {
-  font-size: 50px;
-  text-align: center;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  width: 80px; /* Adjusted size for smaller borders */
 }
 
 h2 {
-  font-size: 14px;
-  text-align: center;
-  margin-bottom: 50px;
+  color: black;
+  font-size: 12px; /* Adjusted size for smaller borders */
+  margin: 0;
 }
 
 .form-container {
-  background-color: #0A2244;
-  padding: 40px;
-  width: 40%; /* Adjust width */
-  max-width: 500px; /* Add max-width */
-  border-radius: 10px;
-  box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.1);
-  margin-right: 50px; /* Add some margin to the left */
+  background-color: rgba(255, 255, 255, 0.3); /* More transparent background */
+  backdrop-filter: blur(25px); /* Increased blur effect */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Light border for glass effect */
+  padding: 10px;
+  width: 70%;
+  max-width: 400px;
+  border-radius: 15px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  position: relative;
+  z-index: 1;
 }
-@media only screen and (max-width: 768px) {
-  .form-container {
-    width: 70%; /* Adjust width for mobile */
-    padding: 30px; /* Adjust padding for mobile */
-    height: 70%;
-    margin-bottom: 600px;
-  }
-}
-
 
 .form-container h1 {
-  color: white;
-  font-size: 50px;
-  text-align: center;
+  color: #000000;
+  font-size: 20px; /* Adjusted size */
   margin-top: 5px;
   margin-bottom: 10px;
 }
 
 label {
-  color: #ffffff;
+  color: black;
   display: block;
   margin-top: 5px;
   margin-bottom: 5px;
+  text-align: left;
 }
 
 input[type="email"], input[type="password"] {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ffffff;
+  padding: 8px;
+  border: 1px solid #464646;
   border-radius: 10px;
   outline: none;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 14px; /* Adjusted size */
 }
 
 button {
-  background-color: #E6B861;
-  color: #000000;
+  background-color: #023047;
+  color: #ffffff;
   border: none;
   padding: 10px 20px;
   border-radius: 10px;
   cursor: pointer;
   margin-top: 15px;
-  width: 100%;
+  width: 70%;
   box-sizing: border-box;
-  font-size: 16px;
+  font-size: 14px; /* Adjusted size */
 }
 
 a {
-  color: #ffffff;
+  color: #000000;
   text-decoration: none;
   transition: color 0.3s, transform 0.3s; /* Add smooth transition */
 }
 
 a:hover {
-  color: #ffffff; 
+  color: #000000; 
   transform: scale(1.20); 
 }
 
@@ -215,6 +220,28 @@ a:hover {
   margin-top: 5px;
 }
 
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 8px 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #b4b4b4;
+}
+
+.divider::before {
+  margin-right: 10px;
+}
+
+.divider::after {
+  margin-left: 10px;
+}
+
 .button-container {
   display: flex;
   justify-content: center;
@@ -223,17 +250,14 @@ a:hover {
   margin-top: 5px;
 }
 
-button.register-button {
-  width: auto; 
-  padding: 10px 20px; 
-}
-
 .register-button {
   margin-left: 10px;
   display: block;
   text-align: center;
-  font-size: small;
-  margin-top: 15px;
+  font-size: 14px;
+  margin-top: 5px;
+  width: 100%; /* Adjusted width */
+  padding: 10px 20px; /* Adjusted padding */
 }
 
 .success-message {
@@ -258,5 +282,36 @@ button.register-button {
   margin-top: 15px;
   font-size: 16px;
   font-weight: bold;
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 600px) {
+  .form-container {
+    width: 90%; /* Increased width for better use of space */
+    padding: 15px; /* Adjusted padding for better mobile experience */
+  }
+
+  .form-container h1 {
+    font-size: 18px; /* Adjusted size */
+  }
+
+  button {
+    width: 100%; /* Full width for buttons */
+    padding: 10px; /* Adjusted padding */
+    font-size: 16px; /* Slightly increased size */
+  }
+
+  input[type="email"], input[type="password"] {
+    padding: 10px; /* Increased padding for better touch experience */
+    font-size: 16px; /* Slightly increased size */
+  }
+
+  .animated-text {
+    font-size: 14px; /* Adjusted size for better readability */
+  }
+
+  .divider {
+    margin: 10px 0; /* Adjusted margin */
+  }
 }
 </style>

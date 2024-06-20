@@ -39,26 +39,29 @@ export default {
 .welcome-text h1 {
   font-size: 2.5em;
   margin-bottom: 20px;
-  color: #333;
+  color: #000000;
 }
 
 .welcome-text p {
   font-size: 1rem;
   line-height: 1.6;
   margin-bottom: 20px;
-  color: #666;
+  text-align: justify;
+  color: #000000;
 }
 
 .purpose-container h2 {
   font-size: 1.6rem;
   margin-bottom: 20px;
-  color: #333;
+  color: #000000;
 }
 
 .purpose-container p {
-  font-size: 1em;
+  font-size: 1rem;
   line-height: 1.6;
-  color: #666;
+  margin-bottom: 20px;
+  text-align: justify;
+  color: #000000;
 }
 
 </style>

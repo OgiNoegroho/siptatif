@@ -295,7 +295,7 @@ export default {
   cursor: pointer;
   padding: 10px 20px;
   margin-right: 10px;
-  border-radius: 4px;
+  border-radius: 5px;
   transition: background-color 0.3s ease;
 }
 

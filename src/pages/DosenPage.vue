@@ -231,36 +231,74 @@ h2 {
   margin-left: 20px;
 }
 
-table {
-  width: 96.5%;
-  max-width: 2000px;
-  border-collapse: collapse;
-  margin: 20px auto; /* Center the table */
-}
-
-table th,
-table td {
-  border: 1px solid #ddd;
-  padding: 8px;
-  text-align: left;
-}
-
-table th {
-  background-color: #f2f2f2;
-}
-
-table tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-table tr:hover {
-  background-color: #ddd;
-}
-
-table tbody tr td:last-child {
+/* Styles for card layout */
+.card-container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  margin: 20px;
+}
+
+.card {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 15px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.card-body {
+  margin-top: 10px;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 10px;
+}
+
+.card-footer .btttn {
+  margin-left: 5px;
+}
+
+/* Table styles (for desktop view) */
+@media (min-width: 768px) {
+  table {
+    width: 96.5%;
+    max-width: 2000px;
+    border-collapse: collapse;
+    margin: 20px auto; /* Center the table */
+  }
+
+  table th,
+  table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+  }
+
+  table th {
+    background-color: #f2f2f2;
+  }
+
+  table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  table tr:hover {
+    background-color: #ddd;
+  }
+
+  table tbody tr td:last-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .btttn {
@@ -356,13 +394,6 @@ table tbody tr td:last-child {
   border-radius: 4px;
   border: 1px solid #ddd;
   font-size: 14px;
-}
-
-.tambah-button {
-  background-color: #4CAF50;
-  color: white;
-  margin-left: 20px;
-  margin-top: 20px;
 }
 
 .message {

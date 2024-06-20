@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import store from '@/store'; // Import Vuex store
+import store from '@/store';
 
 import MasterPage from '@/pages/layout/MasterPage.vue';
 import HomePage from '@/pages/HomePage.vue';
@@ -93,10 +93,8 @@ const router = createRouter({
   routes
 });
 
-// Define public pages that do not require authentication
 const publicPages = ['Login', 'ForgotPassword', 'Registration'];
 
-// Add navigation guard
 router.beforeEach((to, from, next) => {
   const isLoggedIn = store.getters['auth/isLoggedIn'];
   const authRequired = !publicPages.includes(to.name);
