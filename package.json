@@ -11,6 +11,8 @@
     "axios": "^1.6.8",
     "core-js": "^3.8.3",
     "dotenv": "^16.4.5",
+    "primeicons": "^7.0.0",
+    "primevue": "^3.52.0",
     "vue": "^3.2.13",
     "vue-router": "^4.3.0",
     "vuex": "^4.1.0"
