@@ -3,7 +3,7 @@
     <div class="welcome-text">
       <h1>Selamat Datang di SIPTATIF</h1>
       <p>
-        Sistem Informasi Pendaftaran Tugas Akhir Mahasiswa TIF dirancang untuk menyediakan platform terintegrasi yang efisien bagi mahasiswa, dosen pembimbing, dan koordinator tugas akhir. Menampilkan ringkasan menyeluruh tentang proses pendaftaran, mencakup grafik visual yang memvisualisasikan jumlah mahasiswa yang sedang mendaftar, status pendaftaran, dan kemajuan proyek tugas akhir.</p>
+        <span>Informasi Pendaftaran Tugas Akhir Mahasiswa TIF</span> dirancang untuk menyediakan platform terintegrasi yang efisien bagi mahasiswa, dosen pembimbing, dan koordinator tugas akhir. Menampilkan ringkasan menyeluruh tentang proses pendaftaran, mencakup grafik visual yang memvisualisasikan jumlah mahasiswa yang sedang mendaftar, status pendaftaran, dan kemajuan proyek tugas akhir.</p>
         <p>
         Mahasiswa dapat mengajukan judul tugas akhir, memilih dosen pembimbing, dan mengunggah proposal melalui formulir elektronik yang disediakan. Selain itu, sistem ini memungkinkan pengelolaan dosen pembimbing dan informasi terkait jadwal konsultasi mereka. Untuk memantau kemajuan tugas akhir, mahasiswa dapat mengunggah laporan kemajuan dan dokumentasi lainnya, dengan notifikasi otomatis yang mengingatkan mereka tentang batas waktu penting seperti pengajuan proposal dan presentasi akhir. Dengan menyediakan penyimpanan elektronik untuk semua dokumen terkait tugas akhir dan riwayatnya, aplikasi ini tidak hanya meningkatkan efisiensi administrasi tetapi juga memperkuat kolaborasi antara mahasiswa dan dosen pembimbing, serta memungkinkan analisis data untuk perbaikan proses pendidikan di universitas.
       </p>
@@ -30,7 +30,7 @@ export default {
 }
 .dashboard-container {
   max-width: 1200px;
-  margin: 50px auto;
+  margin: 0px auto;
   padding: 20px;
   box-shadow: 0 0 100px rgba(17, 42, 154, 0.1);
 }
@@ -39,6 +39,10 @@ export default {
   font-size: 2.5em;
   margin-bottom: 20px;
   color: #000000;
+}
+
+.welcome-text span {
+  font-weight: bolder;
 }
 
 .welcome-text p {

@@ -1,8 +1,8 @@
 <template>
   <div class="container">
     <div class="tabs">
-      <h2 :class="{ active: currentPage === 'berkas' }" @click="navigateTo('berkas')">Berkas Mahasiswa</h2>
-      <h2 :class="{ active: currentPage === 'dosen' }" @click="navigateTo('dosen')">Input Dosen Penguji</h2>
+      <h3 :class="{ active: currentPage === 'berkas' }" @click="navigateTo('berkas')">Berkas Mahasiswa</h3>
+      <h3 :class="{ active: currentPage === 'dosen' }" @click="navigateTo('dosen')">Input Dosen Penguji</h3>
     </div>
 
     <div v-if="currentPage === 'berkas'">
@@ -130,7 +130,7 @@
           <option v-for="dosen in filteredDosenList2" :key="dosen.NIP" :value="dosen.NIP">{{ dosen.Nama }} ({{ dosen.NIP }})</option>
         </select>
       </div>
-      <button class="btttn simpan-button" @click="submitDosenPenguji">
+      <button class="btttn select-dosen-button" @click="submitDosenPenguji">
         Kirim
       </button>
     </div>
@@ -292,19 +292,19 @@ export default {
   margin-bottom: 20px;
 }
 
-.tabs h2 {
+.tabs h3 {
   cursor: pointer;
-  padding: 10px 20px;
+  padding: 5px 10px;
   margin-right: 10px;
-  border-radius: 5px;
+  border-radius: 4px;
   transition: background-color 0.3s ease;
 }
 
-.tabs h2:hover {
+.tabs h3:hover {
   background-color: #e0e0e0;
 }
 
-.tabs h2.active {
+.tabs h3.active {
   background-color: #007bff;
   color: white;
 }
@@ -403,10 +403,10 @@ textarea {
   border: none;
   border-radius: 4px;
   font-weight: 400;
-  font-size: 18px;
+  font-size: 15px;
   text-align: center;
-  height: 50px;
-  padding: 15px 25px;
+  height: 40px;
+  padding: 5px;
   background-color: #007bff;
   color: white;
   transition: background-color 0.3s ease;
@@ -416,7 +416,7 @@ textarea {
   background-color: #0056b3;
 }
 
-.back-button, .select-dosen-button {
+.back-button {
   cursor: pointer;
   border: none;
   border-radius: 4px;
@@ -427,13 +427,34 @@ textarea {
   background-color: #007bff;
   color: white;
   transition: background-color 0.3s ease;
+  margin-top: 20px;
   margin-bottom: 50px;
   display: block;
   width: fit-content;
   margin-left: 0;
 }
 
-.back-button:hover, .select-dosen-button:hover {
+.back-button:hover {
+  background-color: #0056b3;
+}
+
+.select-dosen-button {
+  cursor: pointer;
+  border: none;
+  border-radius: 4px;
+  font-weight: 400;
+  font-size: 18px;
+  text-align: center;
+  height: 40px;
+  width: 70px;
+  padding: 5px;
+  background-color: #007bff;
+  color: white;
+  transition: background-color 0.3s ease;
+}
+
+
+.select-dosen-button:hover {
   background-color: #0056b3;
 }
 

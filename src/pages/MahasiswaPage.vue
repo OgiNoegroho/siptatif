@@ -302,6 +302,12 @@ h2 {
   margin-left: 20px;
 }
 
+h3 {
+  text-align: center;
+  padding-left: 10%;
+  flex-grow: 1;
+}
+
 .mahasiswa-table {
   width: 96.5%;
   max-width: 2000px;
@@ -384,7 +390,7 @@ table tbody tr td:last-child {
   background-color: #fff;
   padding: 15px;
   border: 1px solid #888;
-  width: 90%;
+  width: 80%;
   max-width: 400px;
   border-radius: 8px;
 }
@@ -430,7 +436,7 @@ table tbody tr td:last-child {
 }
 
 .form-group button {
-  width: 100%;
+  width: 88%;
   background-color: #4CAF50;
   color: white;
   padding: 10px;
@@ -443,16 +449,6 @@ table tbody tr td:last-child {
   background-color: #45a049;
 }
 
-.success-message {
-  color: green;
-  margin-top: 10px;
-}
-
-.error-message {
-  color: red;
-  margin-top: 10px;
-}
-
 /* Card styles */
 .card-container {
   display: none;
@@ -462,7 +458,7 @@ table tbody tr td:last-child {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  margin: 10px;
+  margin: 19px;
   padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -477,7 +473,7 @@ table tbody tr td:last-child {
   margin-top: 10px;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 769px) {
   .mahasiswa-table {
     display: none;
   }

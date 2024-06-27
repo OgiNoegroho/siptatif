@@ -9,44 +9,55 @@
         </div>
         <div>
           <label for="password">Password:</label>
-          <input type="password" id="password" v-model="password" required>
+          <div class="password-container">
+            <input :type="passwordFieldType" id="password" v-model="password" required>
+            <span class="toggle-password" @click="togglePasswordVisibility">
+              <i :class="passwordVisible ? 'pi pi-eye-slash' : 'pi pi-eye'"></i>
+            </span>
+          </div>
         </div>
         <div>
-          <label for="name">Name:</label>
+          <label for="name">Nama:</label>
           <input type="text" id="name" v-model="name" required>
         </div>
         <div>
           <label for="nip">NIP:</label>
-          <input type="text" id="nip" v-model="nip" required>
+          <input type="text" id="nip" v-model="nip" required @input="validateNip">
         </div>
         <div>
-          <label for="birthplace">Birthplace:</label>
-          <input type="text" id="birthplace" v-model="birthplace" required>
-        </div>
-        <div>
-          <label for="birthdate">Birthdate:</label>
-          <input type="date" id="birthdate" v-model="birthdate" required>
-        </div>
-        <div>
-          <label for="address">Address:</label>
-          <input type="text" id="address" v-model="address" required>
-        </div>
-        <div>
-          <label for="gender">Gender:</label>
-          <select id="gender" v-model="gender" required>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+          <label for="birthplace">Tempat Lahir:</label>
+          <select id="birthplace" v-model="birthplace" required>
+            <option value="" disabled></option>
+            <option v-for="city in cities" :key="city" :value="city">{{ city }}</option>
           </select>
         </div>
         <div>
-          <label for="age">Age:</label>
+          <label for="birthdate">Tanggal Lahir:</label>
+          <input type="date" id="birthdate" v-model="birthdate" required>
+        </div>
+        <div>
+          <label for="age">Umur:</label>
           <input type="number" id="age" :value="calculatedAge" readonly>
         </div>
+        <div>
+          <label for="address">Alamat:</label>
+          <input type="text" id="address" v-model="address" required>
+          <small class="address-note">Format: JL. Taman Karya No.10</small>
+        </div>
+        <div>
+          <label for="gender">Jenis Kelamin:</label>
+          <select id="gender" v-model="gender" required>
+            <option value="Male">Laki-Laki</option>
+            <option value="Female">Perempuan</option>
+          </select>
+        </div>
+      
         <div class="button-container">
+          <span class="login-link" @click="redirectToLogin">Kembali ke login page</span>
           <button type="submit" class="register-button">Register</button>
         </div>
       </form>
-      <p v-if="registerMessage" :class="registerMessage.includes('error') ? 'error-message' : 'success-message'">
+      <p ref="registerMessage" v-if="registerMessage" :class="registerMessage.includes('error') ? 'error-message' : 'success-message'">
         {{ registerMessage }}
       </p>
     </div>
@@ -54,6 +65,8 @@
 </template>
 
 <script>
+import { nextTick } from 'vue';
+
 export default {
   data() {
     return {
@@ -65,7 +78,14 @@ export default {
       birthdate: '',
       address: '',
       gender: '',
-      registerMessage: ''
+      registerMessage: '',
+      cities: [
+        'Jakarta', 'Surabaya', 'Bandung', 'Bekasi', 'Medan', 'Depok', 'Tangerang', 'Semarang', 'Palembang', 
+        'South Tangerang', 'Makassar', 'Batam', 'Pekanbaru', 'Bogor', 'Bandar Lampung', 'Padang', 'Malang', 
+        'Denpasar', 'Samarinda', 'Tasikmalaya', 'Pontianak', 'Banjarmasin', 'Balikpapan', 'Jambi', 
+        'Surakarta', 'Mataram', 'Manado', 'Yogyakarta', 'Kupang', 'Cilegon', 'Ambon', 'Jayapura'
+      ],
+      passwordVisible: false
     };
   },
   computed: {
@@ -79,9 +99,21 @@ export default {
         age--;
       }
       return age;
+    },
+    passwordFieldType() {
+      return this.passwordVisible ? 'text' : 'password';
     }
   },
   methods: {
+    validateNip() {
+      this.nip = this.nip.replace(/\D/g, '');
+    },
+    togglePasswordVisibility() {
+      this.passwordVisible = !this.passwordVisible;
+    },
+    redirectToLogin() {
+      this.$router.push('/'); // Redirect to login page
+    },
     register() {
       const age = this.calculatedAge; // Calculate the age
 
@@ -107,6 +139,9 @@ export default {
       .then(response => response.json())
       .then(data => {
         this.registerMessage = data.message;
+        nextTick(() => {
+          this.scrollToMessage();
+        });
         if (data.success) {
           setTimeout(() => {
             this.$router.push('/'); // Redirect to login page after delay
@@ -116,7 +151,16 @@ export default {
       .catch(error => {
         console.error('Error registering:', error);
         this.registerMessage = 'An error occurred while registering.';
+        nextTick(() => {
+          this.scrollToMessage();
+        });
       });
+    },
+    scrollToMessage() {
+      const messageElement = this.$refs.registerMessage;
+      if (messageElement) {
+        messageElement.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   }
 };
@@ -180,6 +224,44 @@ select {
   margin-bottom: 10px;
 }
 
+.password-container {
+  display: flex;
+  align-items: center;
+  position: relative; /* Added to position icon properly */
+}
+
+input[type="password"],
+input[type="text"] {
+  padding-right: 33px; 
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px; /* Adjusted right position for better alignment */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%);
+  color: #0A2244;
+  cursor: pointer;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px; /* Adjusted right position for better alignment */
+  top: calc(50% - 4px); /* Center vertically with a 2px upward adjustment */
+  transform: translateY(-50%);
+  color: #0A2244;
+  cursor: pointer;
+}
+
+
+.address-note {
+  font-size: 0.8em;
+  color: #888;
+  margin-top: -5px; /* Reduced margin-top */
+  margin-bottom: 10px; /* Adjusted bottom margin */
+  display: block;
+}
+
 .button-container {
   display: flex;
   justify-content: center;
@@ -190,6 +272,17 @@ select {
 button.register-button {
   width: auto; 
   padding: 10px 100px; 
+  margin-left: 20px; /* Added margin-right to space out the buttons */
+}
+
+.login-link {
+  margin-left: 10px;
+  margin-top: 12px;
+  font-size: 16px; /* Same size as the register button */
+  color: #0A2244;
+  text-decoration: underline;
+  cursor: pointer;
+  align-self: center; /* Center align with button */
 }
 
 button {

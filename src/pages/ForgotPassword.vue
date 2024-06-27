@@ -110,32 +110,46 @@ body {
 }
 
 .container {
-  width: 300px;
-  margin: 0 auto;
-  padding: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 95%;
+  height: 95%;
+  padding: 10px;
+  max-width: 500px;
+  border-radius: 10px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
   border: 1px solid #ccc;
-  border-radius: 35px;
   margin-top: 150px;
+  margin-bottom: 150px;
 }
 
 .reset-password-container h1 {
   text-align: center;
   margin-bottom: 18px;
-  color: #0A2244;
+}
+
+.reset-password-container h5 {
+  text-align: center;
+  margin-bottom: 10px;
 }
 
 .input-field {
-  width: 90%;
-  padding: 10px;
-  border-radius: 10px;
-  margin: 30px 0;
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #2F3F7A;
+  border-radius: 5px;
+  outline: none;
+  box-sizing: border-box;
+  margin-bottom: 10px;
 }
 
 .button {
   display: block;
   width: 100%;
   padding: 10px;
-  background-color: #2F3F57;
+  background-color: #0A2244;
   color: #fff;
   text-align: center;
   text-decoration: none;
@@ -149,7 +163,7 @@ body {
   padding: 10px;
   text-align: center;
   text-decoration: none;
-  color: #5F7A2F;
+  color: #0A2244;
 }
 
 .success-message {

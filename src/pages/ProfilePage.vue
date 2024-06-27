@@ -7,13 +7,13 @@
       </div>
 
       <div class="profile-details">
-        <div><label>Name        :</label><span>{{ profile.name }}</span></div>
-        <div><label>NIP         :</label><span>{{ profile.nip }}</span></div>
-        <div><label>Age         :</label><span>{{ profile.age }}</span></div>
-        <div><label>Birthplace  :</label><span>{{ profile.birthplace }}</span></div>
-        <div><label>Birthdate   :</label><span>{{ formattedBirthdate }}</span></div>
-        <div><label>Address     :</label><span>{{ profile.address }}</span></div>
-        <div><label>Gender      :</label><span>{{ profile.gender }}</span></div>
+        <div><label>Nama:</label><span>{{ profile.name }}</span></div>
+        <div><label>NIP:</label><span>{{ profile.nip }}</span></div>
+        <div><label>Tempat Lahir:</label><span>{{ profile.birthplace }}</span></div>
+        <div><label>Tanggal Lahir:</label><span>{{ formattedBirthdate }}</span></div>
+        <div><label>Umur:</label><span>{{ profile.age }}</span></div>
+        <div><label>Alamat:</label><span>{{ profile.address }}</span></div>
+        <div><label>Jenis Kelamin:</label><span>{{ translatedGender }}</span></div>
       </div>
 
       <div class="button-container">
@@ -55,8 +55,8 @@
         <div class="modal-details">
           <label>Gender:</label>
           <select v-model="form.gender">
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
+            <option value="Male">Laki-Laki</option>
+            <option value="Female">Perempuan</option>
           </select>
         </div>
         <div class="button-container centered">
@@ -121,6 +121,10 @@ export default {
         return womanImage;
       }
       return null;
+    },
+    translatedGender() {
+      if (!this.profile) return '';
+      return this.profile.gender === 'Male' ? 'Laki-Laki' : 'Perempuan';
     }
   },
   watch: {
@@ -165,12 +169,10 @@ export default {
         toast.success('Profile updated successfully.');
         this.editMode = false;
         this.fetchProfile(); // Fetch the updated profile data
-       
       })
       .catch(error => {
         console.error('Error updating profile:', error);
         toast.error('Error updating profile.');
- 
       })
       .finally(() => {
         this.isLoading = false; // Reset loading state

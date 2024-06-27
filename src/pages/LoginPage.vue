@@ -14,14 +14,17 @@
         <input type="email" v-model="loginData.email" id="email" required>
         <br>
         <label for="password">Password</label>
-        <input type="password" v-model="loginData.password" id="password" required>
+        <div class="password-container">
+          <input :type="passwordFieldType" v-model="loginData.password" id="password" required>
+          <i :class="passwordToggleIcon" @click="togglePasswordVisibility"></i>
+        </div>
         <router-link to="/forgot-password" class="forgot-password">Forgot Password?</router-link>
         <div class="button-container">
           <button :disabled="isLoading" type="submit">
             <span v-if="isLoading">Loading...</span>
             <span v-else>Login</span>
           </button>
-        </div>   
+        </div>
         <div class="divider"><span>or</span></div>
         <div class="button-container">
           <router-link to="/registration" class="register-button">Create Account</router-link>
@@ -32,6 +35,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 import { ref } from 'vue';
@@ -44,8 +48,20 @@ export default {
     const isLoading = ref(false);
     const loginMessage = ref('');
     const successMessage = ref('');
+    const passwordFieldType = ref('password');
+    const passwordToggleIcon = ref('pi pi-eye-slash');
     const router = useRouter();
     const store = useStore();
+
+    const togglePasswordVisibility = () => {
+      if (passwordFieldType.value === 'password') {
+        passwordFieldType.value = 'text';
+        passwordToggleIcon.value = 'pi pi-eye';
+      } else {
+        passwordFieldType.value = 'password';
+        passwordToggleIcon.value = 'pi pi-eye-slash';
+      }
+    };
 
     const login = async () => {
       isLoading.value = true;
@@ -71,6 +87,9 @@ export default {
       loginMessage,
       successMessage,
       login,
+      passwordFieldType,
+      passwordToggleIcon,
+      togglePasswordVisibility
     };
   }
 };
@@ -186,7 +205,7 @@ label {
   text-align: left;
 }
 
-input[type="email"], input[type="password"] {
+input[type="email"], input[type="password"], input[type="text"] {
   width: 100%;
   padding: 8px;
   border: 1px solid #464646;
@@ -194,6 +213,22 @@ input[type="email"], input[type="password"] {
   outline: none;
   box-sizing: border-box;
   font-size: 14px; /* Adjusted size */
+}
+
+.password-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-container input {
+  padding-right: 33px; /* Padding to ensure space between text and icon */
+}
+
+.password-container i {
+  position: absolute;
+  right: 10px;
+  cursor: pointer;
 }
 
 button {
@@ -308,7 +343,7 @@ a:hover {
     font-size: 16px; /* Slightly increased size */
   }
 
-  input[type="email"], input[type="password"] {
+  input[type="email"], input[type="password"], input[type="text"] {
     padding: 10px; /* Increased padding for better touch experience */
     font-size: 16px; /* Slightly increased size */
   }

@@ -26,7 +26,7 @@
       <div class="card-wrapper">
         <div class="card" v-for="(dosen, index) in dosenList" :key="index">
           <div class="card-header">
-            <span>No: {{ index + 1 }}</span>
+            <p><strong>No:</strong> {{ index + 1 }}</p>
           </div>
           <div class="card-body">
             <p><strong>Nama Dosen:</strong> {{ dosen.nama_penguji }}</p>
@@ -88,7 +88,8 @@ export default {
 }
 
 h2 {
-  text-align: center;
+  margin-top: 20px;
+  margin-left: 20px;
   margin-bottom: 10px;
   text-transform: capitalize;
 }
@@ -98,10 +99,10 @@ h2 {
 }
 
 table {
-  width: 100%;
+  width: 96.5%;
+  max-width: 2000px;
   border-collapse: collapse;
-  margin-top: 20px;
-  align-items: center;
+  margin: 20px auto; /* Center the table */
 }
 
 table th,
@@ -152,9 +153,9 @@ table tbody tr td:last-child {
 .card {
   background-color: #fff;
   border: 1px solid #ddd;
-  border-radius: 10px;
-  margin: 10px 0;
-  padding: 15px;
+  border-radius: 8px;
+  margin: 20px;
+  padding: 10px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 

@@ -117,7 +117,8 @@ export default {
 .koordinator-text {
   color: white;
   font-size: 16px;
-  margin-right: 30px;
+  margin-right: 15px;
+  margin-top: 5px;
 }
 
 .profile-pic {

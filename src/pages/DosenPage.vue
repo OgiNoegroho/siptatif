@@ -6,6 +6,8 @@
     <div v-if="showModal" class="modal">
       <div class="modal-content">
         <span class="close-btn" @click="closeModal">&times;</span>
+        <br>
+        <br>
         <h3>{{ editingIndex === null ? 'Tambah' : 'Edit' }} Data Dosen</h3>
         <form id="formTambahDosenModal" @submit.prevent="submitForm" class="form-container">
           <div class="form-group">
@@ -66,7 +68,7 @@
     <div class="card-layout">
       <div v-for="(dosen, index) in dosenList" :key="index" class="card">
         <div class="card-content">
-          <h3>{{ dosen.Nama }}</h3>
+          <p><strong>Nama:</strong> {{ dosen.Nama }}</p>
           <p><strong>NIP:</strong> {{ dosen.NIP }}</p>
           <p><strong>Jenis Kelamin:</strong> {{ dosen.JenisKelamin }}</p>
           <div class="card-actions">
@@ -223,7 +225,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
 
@@ -238,6 +239,10 @@ export default {
 h2 {
   margin-top: 20px;
   margin-left: 20px;
+}
+
+h3{
+text-align: center;
 }
 
 .table-wrapper {
@@ -281,7 +286,7 @@ table tbody tr td:last-child {
   margin-right: 10px;
   cursor: pointer;
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   font-size: 14px;
   text-align: center;
   text-decoration: none;
@@ -306,32 +311,36 @@ table tbody tr td:last-child {
   justify-content: center;
   align-items: center;
   position: fixed;
-  top: 0;
+  z-index: 1002;
   left: 0;
+  top: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
   background-color: #fff;
   padding: 15px;
   border: 1px solid #888;
-  width: 90%;
+  width: 80%;
   max-width: 400px;
   border-radius: 8px;
 }
 
 .close-btn {
-  color: #aaa;
+  color: #030303;
   float: right;
+  margin-bottom: 20px;
+  margin-left: 20px;
   font-size: 28px;
   font-weight: bold;
 }
 
 .close-btn:hover,
 .close-btn:focus {
-  color: black;
+  color: rgb(241, 4, 4);
   text-decoration: none;
   cursor: pointer;
 }
@@ -339,45 +348,39 @@ table tbody tr td:last-child {
 .form-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
 }
 
 .form-group {
   margin-bottom: 10px;
-  width: 100%;
 }
 
 .form-group input,
 .form-group select {
   width: 100%;
   padding: 8px;
+  margin: 5px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
   border-radius: 4px;
-  border: 1px solid #ddd;
-  font-size: 14px;
+  box-sizing: border-box;
 }
 
-.tambah-button {
+.form-group label {
+  margin-bottom: 5px;
+}
+
+.form-group button {
+  width: 88%;
   background-color: #4CAF50;
   color: white;
-  margin-left: 20px;
-  margin-top: 20px;
-}
-
-.message {
-  margin: 20px;
   padding: 10px;
+  border: none;
   border-radius: 4px;
-  text-align: center;
+  cursor: pointer;
 }
 
-.success {
-  background-color: #4CAF50;
-  color: white;
-}
-
-.error {
-  background-color: #f44336;
-  color: white;
+.form-group button:hover {
+  background-color: #45a049;
 }
 
 .card-layout {
@@ -415,7 +418,7 @@ table tbody tr td:last-child {
   flex-grow: 1; /* Tombol akan memenuhi ruang yang tersedia */
   margin: 1px; /* Menghilangkan margin agar tombol berdekatan */
   cursor: pointer;
-  border-radius: 8px;
+  border-radius: 4px;
   margin-top: 10px;
   font-size: 14px; /* Ukuran teks tombol */
   text-align: center; /* Teks di tengah tombol */
@@ -430,7 +433,6 @@ table tbody tr td:last-child {
   background-color: #f44336;
   color: white;
 }
-
 
 @media screen and (min-width: 769px) {
   .card-layout {

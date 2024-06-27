@@ -1,6 +1,6 @@
 <template>
   <div class="dosen-penguji-container">
-    <h2>Detail Dosen Penguji</h2>
+    <h2>Detail Dosen Penguji:</h2>
     <div v-if="dosen" class="dosen-detail">
       <p><strong>Nama:</strong> {{ dosen.nama }}</p>
       <p><strong>NIP:</strong> {{ dosen.nip }}</p>
@@ -10,7 +10,7 @@
       <p>Loading...</p>
     </div>
 
-    <h3>Mahasiswa Mentored:</h3>
+    <h3>Mahasiswa yang Diuji:</h3>
     <ul class="mahasiswa-list">
       <li v-for="(mahasiswa, index) in mahasiswaList" :key="index" class="mahasiswa-item">
         <p><strong>Nama Mahasiswa:</strong> {{ mahasiswa.nama }}</p>
