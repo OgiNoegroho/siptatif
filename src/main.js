@@ -4,6 +4,9 @@ import router from './router';
 import store from './store';
 import axios from 'axios';
 import 'primeicons/primeicons.css';
+import Toast, { POSITION } from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
+
 
 const app = createApp(App);
 
@@ -29,7 +32,13 @@ axios.interceptors.response.use(response => {
   return Promise.reject(error);
 });
 
+const options = {
+  // You can set your default options here
+  position: POSITION.TOP_RIGHT
+};
+
 app
   .use(router)
   .use(store)
+  .use(Toast, options)
   .mount('#app');

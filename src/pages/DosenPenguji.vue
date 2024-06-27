@@ -47,6 +47,9 @@ import axios from 'axios';
 export default {
   data() {
     return {
+      showModal: false,
+      inputNama: '',
+      inputNIP: '',
       dosenList: []
     };
   },
@@ -98,6 +101,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  align-items: center;
 }
 
 table th,
@@ -129,7 +133,7 @@ table tbody tr td:last-child {
   padding: 8px 12px;
   cursor: pointer;
   border: none;
-  border-radius: 10px;
+  border-radius: 4px;
   font-size: 14px;
   text-align: center;
   text-decoration: none;
@@ -138,6 +142,7 @@ table tbody tr td:last-child {
 .tombol-detail {
   background-color: #2196F3;
   color: white;
+  margin-right: 5px;
 }
 
 .card-wrapper {
@@ -171,5 +176,15 @@ table tbody tr td:last-child {
   .card-wrapper {
     display: block;
   }
+
+  .btttn {
+  margin: auto;
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  display: block;
+  flex-grow: 1;
+}
+
 }
 </style>

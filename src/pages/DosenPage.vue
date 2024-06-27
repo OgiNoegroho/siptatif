@@ -2,9 +2,6 @@
   <div>
     <h2>Data Dosen</h2>
 
-    <!-- Display Success/Error Message -->
-    <div v-if="message" :class="messageType">{{ message }}</div>
-
     <!-- Modal for Tambah Data Dosen -->
     <div v-if="showModal" class="modal">
       <div class="modal-content">
@@ -84,6 +81,7 @@
 
 <script>
 import axios from 'axios';
+import { useToast } from 'vue-toastification';
 
 export default {
   data() {
@@ -93,9 +91,7 @@ export default {
       inputNama: '',
       inputNIP: '',
       inputJenisKelamin: '',
-      dosenList: [],
-      message: '',
-      messageType: ''
+      dosenList: []
     };
   },
   created() {
@@ -103,6 +99,7 @@ export default {
   },
   methods: {
     async fetchDosenList() {
+      const toast = useToast();
       try {
         const response = await axios.get('https://express-mysql-virid.vercel.app/api/dosen', {
           headers: {
@@ -112,10 +109,11 @@ export default {
         this.dosenList = response.data;
       } catch (error) {
         console.error('Error fetching dosen list:', error);
-        this.displayMessage('Error fetching dosen list', 'error');
+        toast.error('Error fetching dosen list');
       }
     },
     async confirmDelete(nip, index) {
+      const toast = useToast();
       if (confirm("Apakah Anda yakin ingin menghapus data dosen ini?")) {
         try {
           const response = await axios.delete(`https://express-mysql-virid.vercel.app/api/dosen/${nip}`, {
@@ -125,13 +123,13 @@ export default {
           });
           if (!response.data.error) {
             this.dosenList.splice(index, 1);
-            this.displayMessage('Data dosen berhasil dihapus', 'success');
+            toast.success('Data dosen berhasil dihapus');
           } else {
-            this.displayMessage(response.data.error, 'error');
+            toast.error(response.data.error);
           }
         } catch (error) {
           console.error('Error deleting dosen:', error);
-          this.displayMessage('Error deleting dosen', 'error');
+          toast.error('Error deleting dosen');
         }
       }
     },
@@ -143,6 +141,7 @@ export default {
       }
     },
     async tambahData() {
+      const toast = useToast();
       try {
         const response = await axios.post('https://express-mysql-virid.vercel.app/api/dosen', {
           NIP: this.inputNIP,
@@ -162,16 +161,17 @@ export default {
           });
           this.resetForm();
           this.closeModal();
-          this.displayMessage('Data dosen berhasil ditambahkan', 'success');
+          toast.success('Data dosen berhasil ditambahkan');
         } else {
-          this.displayMessage(response.data.error, 'error');
+          toast.error(response.data.error);
         }
       } catch (error) {
         console.error('Error adding dosen:', error);
-        this.displayMessage('Error adding dosen', 'error');
+        toast.error('Error adding dosen');
       }
     },
     async updateData() {
+      const toast = useToast();
       try {
         const response = await axios.put(`https://express-mysql-virid.vercel.app/api/dosen/${this.inputNIP}`, {
           Nama: this.inputNama,
@@ -190,13 +190,13 @@ export default {
           };
           this.resetForm();
           this.closeModal();
-          this.displayMessage('Data dosen berhasil diupdate', 'success');
+          toast.success('Data dosen berhasil diupdate');
         } else {
-          this.displayMessage(response.data.error, 'error');
+          toast.error(response.data.error);
         }
       } catch (error) {
         console.error('Error updating dosen:', error);
-        this.displayMessage('Error updating dosen', 'error');
+        toast.error('Error updating dosen');
       }
     },
     editDosen(index) {
@@ -218,18 +218,11 @@ export default {
       this.inputNama = '';
       this.inputNIP = '';
       this.inputJenisKelamin = '';
-    },
-    displayMessage(message, type) {
-      this.message = message;
-      this.messageType = type;
-      setTimeout(() => {
-        this.message = '';
-        this.messageType = '';
-      }, 3000);
     }
   }
 }
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
@@ -304,16 +297,6 @@ table tbody tr td:last-child {
 .icon {
   margin-right: 5px;
   font-size: 14px;
-  color: white;
-}
-
-.tombol-edit {
-  background-color: #FFC107;
-  color: white;
-}
-
-.tombol-delete {
-  background-color: #f44336;
   color: white;
 }
 
@@ -412,7 +395,7 @@ table tbody tr td:last-child {
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   width: 100%;
-  max-width: 300px;
+  flex-grow: 1;
 }
 
 .card-content h3 {
@@ -425,9 +408,29 @@ table tbody tr td:last-child {
 
 .card-actions {
   display: flex;
-  justify-content: center;
-  gap: 10px;
+  justify-content: space-between; /* Mengatur jarak antara tombol */
 }
+
+.card-actions button {
+  flex-grow: 1; /* Tombol akan memenuhi ruang yang tersedia */
+  margin: 1px; /* Menghilangkan margin agar tombol berdekatan */
+  cursor: pointer;
+  border-radius: 8px;
+  margin-top: 10px;
+  font-size: 14px; /* Ukuran teks tombol */
+  text-align: center; /* Teks di tengah tombol */
+}
+
+.tombol-edit {
+  background-color: #FFC107;
+  color: white;
+}
+
+.tombol-delete {
+  background-color: #f44336;
+  color: white;
+}
+
 
 @media screen and (min-width: 769px) {
   .card-layout {
@@ -435,6 +438,10 @@ table tbody tr td:last-child {
   }
   
   .table-wrapper {
+    display: block;
+  }
+
+  .btttn .tombol-delete {
     display: block;
   }
 }

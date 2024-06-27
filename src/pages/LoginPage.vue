@@ -28,6 +28,7 @@
         </div>
       </form>
       <p v-if="loginMessage" class="error-message">{{ loginMessage }}</p>
+      <p v-if="successMessage" class="success-message">{{ successMessage }}</p>
     </div>
   </div>
 </template>
@@ -42,15 +43,20 @@ export default {
     const loginData = ref({ email: '', password: '' });
     const isLoading = ref(false);
     const loginMessage = ref('');
+    const successMessage = ref('');
     const router = useRouter();
     const store = useStore();
 
     const login = async () => {
       isLoading.value = true;
       loginMessage.value = '';
+      successMessage.value = '';
       try {
         await store.dispatch('auth/login', loginData.value);
-        router.push('/Home'); // Redirect to home page
+        successMessage.value = 'Login successful! Redirecting...';
+        setTimeout(() => {
+          router.push('/Home'); // Redirect to home page
+        }, 2000); // Delay of 2 seconds
       } catch (error) {
         loginMessage.value = 'An error occurred during login.';
         console.error('Error logging in:', error);
@@ -63,6 +69,7 @@ export default {
       loginData,
       isLoading,
       loginMessage,
+      successMessage,
       login,
     };
   }

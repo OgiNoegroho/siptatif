@@ -120,13 +120,13 @@
       </table>
       <div class="form-group">
         <label for="dosenPenguji1">Dosen Penguji 1:</label>
-        <select v-model="dosenPenguji1" @change="handlePenguji1Change">
+        <select id="dosenPenguji1" v-model="dosenPenguji1" @change="handlePenguji1Change">
           <option v-for="dosen in dosenList" :key="dosen.NIP" :value="dosen.NIP">{{ dosen.Nama }} ({{ dosen.NIP }})</option>
         </select>
       </div>
       <div class="form-group">
         <label for="dosenPenguji2">Dosen Penguji 2:</label>
-        <select v-model="dosenPenguji2">
+        <select id="dosenPenguji2" v-model="dosenPenguji2">
           <option v-for="dosen in filteredDosenList2" :key="dosen.NIP" :value="dosen.NIP">{{ dosen.Nama }} ({{ dosen.NIP }})</option>
         </select>
       </div>
@@ -143,6 +143,7 @@
 
 <script>
 import axios from 'axios';
+import { useToast } from 'vue-toastification';
 
 export default {
   data() {
@@ -155,7 +156,7 @@ export default {
       dosenPenguji2: '',
       alertMessage: '',
       alertType: '',
-      filteredDosenList2: [] // To store the filtered list for Penguji 2
+      filteredDosenList2: []
     };
   },
   computed: {
@@ -189,7 +190,7 @@ export default {
           }
         });
         this.dosenList = response.data;
-        console.log('Dosen list:', this.dosenList); // Debugging: Log dosenList to ensure data is fetched
+        console.log('Dosen list:', this.dosenList);
       } catch (error) {
         console.error('Error fetching dosen list:', error);
       }
@@ -211,17 +212,15 @@ export default {
         try {
           const nim = this.selectedMahasiswa.nim;
           await axios.put(`https://express-mysql-virid.vercel.app/api/pendaftaran/${nim}/status`, { status: this.selectedStatus }, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
           this.selectedMahasiswa.status = this.selectedStatus;
-          this.alertMessage = 'Status updated successfully';
-          this.alertType = 'success';
+          this.showToast('Status updated successfully', 'success');
         } catch (error) {
           console.error('Error updating mahasiswa status:', error);
-          this.alertMessage = 'Error updating status';
-          this.alertType = 'error';
+          this.showToast('Error updating status', 'error');
         }
       }
     },
@@ -239,17 +238,15 @@ export default {
             nip_penguji1: this.dosenPenguji1,
             nip_penguji2: this.dosenPenguji2,
           }, {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        });
-          this.alertMessage = 'Penguji updated successfully';
-          this.alertType = 'success';
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+          });
+          this.showToast('Penguji updated successfully', 'success');
           this.navigateTo('berkas');
         } catch (error) {
           console.error('Error updating dosen penguji:', error);
-          this.alertMessage = 'Error updating penguji';
-          this.alertType = 'error';
+          this.showToast('Error updating penguji', 'error');
         }
       }
     },
@@ -258,7 +255,7 @@ export default {
     },
     getFileName(berkas) {
       if (!berkas) {
-        return 'No file available'; // or return an empty string or any placeholder
+        return 'No file available';
       }
       const parts = berkas.split('/');
       return parts[parts.length - 1];
@@ -268,6 +265,10 @@ export default {
     },
     handlePenguji1Change() {
       this.fetchDosenWithoutNIP(this.dosenPenguji1);
+    },
+    showToast(message, type) {
+      const toast = useToast();
+      toast[type](message);
     }
   },
   async mounted() {

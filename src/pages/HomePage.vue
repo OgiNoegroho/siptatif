@@ -3,10 +3,9 @@
     <div class="welcome-text">
       <h1>Selamat Datang di SIPTATIF</h1>
       <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus ac orci sit amet arcu tristique ornare at vitae enim. Nulla fermentum nec eros eu accumsan. In hac habitasse platea dictumst. Quisque facilisis leo ut augue egestas ultricies. Fusce tincidunt justo ut mi blandit, at vehicula odio tristique. In non tellus metus. Sed eu mi nec sem bibendum ultrices. Aliquam erat volutpat. Cras feugiat enim vel enim suscipit blandit. Curabitur finibus erat et odio efficitur, eget egestas dolor vehicula.
-      </p>
-      <p>
-        Vivamus ullamcorper libero non justo aliquam, vitae tincidunt sem lobortis. Nam sed ex eget magna varius tristique. Integer nec sapien ipsum. In nec tristique purus. Quisque vitae turpis at nulla tincidunt fermentum. Aliquam eget mi ac ligula tincidunt luctus. Morbi ac elit sollicitudin, semper justo eget, ullamcorper leo. Nullam rutrum non metus id tincidunt. Donec sed tortor sed erat fringilla cursus. Sed non metus non ex venenatis volutpat.
+        Sistem Informasi Pendaftaran Tugas Akhir Mahasiswa TIF dirancang untuk menyediakan platform terintegrasi yang efisien bagi mahasiswa, dosen pembimbing, dan koordinator tugas akhir. Menampilkan ringkasan menyeluruh tentang proses pendaftaran, mencakup grafik visual yang memvisualisasikan jumlah mahasiswa yang sedang mendaftar, status pendaftaran, dan kemajuan proyek tugas akhir.</p>
+        <p>
+        Mahasiswa dapat mengajukan judul tugas akhir, memilih dosen pembimbing, dan mengunggah proposal melalui formulir elektronik yang disediakan. Selain itu, sistem ini memungkinkan pengelolaan dosen pembimbing dan informasi terkait jadwal konsultasi mereka. Untuk memantau kemajuan tugas akhir, mahasiswa dapat mengunggah laporan kemajuan dan dokumentasi lainnya, dengan notifikasi otomatis yang mengingatkan mereka tentang batas waktu penting seperti pengajuan proposal dan presentasi akhir. Dengan menyediakan penyimpanan elektronik untuk semua dokumen terkait tugas akhir dan riwayatnya, aplikasi ini tidak hanya meningkatkan efisiensi administrasi tetapi juga memperkuat kolaborasi antara mahasiswa dan dosen pembimbing, serta memungkinkan analisis data untuk perbaikan proses pendidikan di universitas.
       </p>
     </div>
     

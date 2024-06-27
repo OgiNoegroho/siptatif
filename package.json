@@ -15,6 +15,7 @@
     "primevue": "^3.52.0",
     "vue": "^3.2.13",
     "vue-router": "^4.3.0",
+    "vue-toastification": "^2.0.0-rc.5",
     "vuex": "^4.1.0"
   },
   "devDependencies": {

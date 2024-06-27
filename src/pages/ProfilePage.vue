@@ -57,7 +57,6 @@
           <select v-model="form.gender">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
-            <option value="Other">Other</option>
           </select>
         </div>
         <div class="button-container centered">
@@ -80,6 +79,7 @@
 import axios from 'axios';
 import manImage from '@/assets/images/man.jpeg';
 import womanImage from '@/assets/images/woman.jpeg';
+import { useToast } from 'vue-toastification';
 
 export default {
   data() {
@@ -88,9 +88,9 @@ export default {
       form: {},
       showEditPicture: false,
       editMode: false,
-      message: '',
-      success: false,
-      isLoading: false // New loading state
+      isLoading: false, // New loading state
+      message: null, // Define message property
+      success: false // Define success property
     };
   },
   created() {
@@ -130,6 +130,7 @@ export default {
   },
   methods: {
     fetchProfile() {
+      const toast = useToast();
       axios.get('https://express-mysql-virid.vercel.app/api/user/profile', {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
@@ -141,7 +142,7 @@ export default {
       })
       .catch(error => {
         console.error('Error fetching profile:', error);
-        this.showMessage('Error fetching profile.', false);
+        toast.error('Error fetching profile.');
       });
     },
     enterEditMode() {
@@ -152,6 +153,7 @@ export default {
       this.editMode = false;
     },
     saveProfile() {
+      const toast = useToast();
       this.isLoading = true; // Set loading state to true
       this.form.age = this.calculatedAge; // Update age before sending the data
       axios.put('https://express-mysql-virid.vercel.app/api/user/profile', this.form, {
@@ -160,24 +162,19 @@ export default {
         }
       })
       .then(() => { // No need to use 'response' variable
-        this.showMessage('Profile updated successfully.', true);
+        toast.success('Profile updated successfully.');
         this.editMode = false;
         this.fetchProfile(); // Fetch the updated profile data
+       
       })
       .catch(error => {
         console.error('Error updating profile:', error);
-        this.showMessage('Error updating profile.', false);
+        toast.error('Error updating profile.');
+ 
       })
       .finally(() => {
         this.isLoading = false; // Reset loading state
       });
-    },
-    showMessage(message, success) {
-      this.message = message;
-      this.success = success;
-      setTimeout(() => {
-        this.message = '';
-      }, 3000);
     }
   }
 };
@@ -215,8 +212,8 @@ export default {
   border: 1px solid #ccc; /* Menetapkan border dengan ketebalan 1px */
   padding: 10px;
   border-radius: 8px;
-  width: 500px; /* Menetapkan lebar profile detail */
-  margin: center; /* Mengatur agar profile detail berada di tengah */
+  width: 100%; /* Menetapkan lebar profile detail */
+  margin: auto; /* Mengatur agar profile detail berada di tengah */
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Menambahkan shadow */
   background-color: #ffffff; /* Memberi warna latar belakang untuk efek emboss */
   text-align: left; /* Atur teks menjadi rata kiri */
@@ -355,7 +352,7 @@ export default {
 }
 
 @media (max-width: 600px) {
-  .profile-pic-container {
+  .profile-pic {
     width: 120px; /* Mengurangi ukuran gambar profil di perangkat mobile */
     height: 120px; /* Mengurangi ukuran gambar profil di perangkat mobile */
   }
@@ -365,4 +362,3 @@ export default {
   }
 }
 </style>
-

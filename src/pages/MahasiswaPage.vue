@@ -70,10 +70,6 @@
       <i class="pi pi-plus-circle icon"></i> Data Mahasiswa
     </button>
 
-    <!-- Success/Error Message -->
-    <div v-if="successMessage" class="success-message">{{ successMessage }}</div>
-    <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div>
-
     <table class="mahasiswa-table">
       <!-- Table headers -->
       <thead>
@@ -136,6 +132,7 @@
 
 <script>
 import axios from 'axios';
+import { useToast } from 'vue-toastification';
 
 export default {
   data() {
@@ -151,9 +148,7 @@ export default {
       inputKategoriTA: '',
       inputJenisTA: '',
       dosenList: [],
-      filteredDosenList2: [], // To store the filtered list for Pembimbing 2
-      successMessage: '',
-      errorMessage: ''
+      filteredDosenList2: [] // To store the filtered list for Pembimbing 2
     };
   },
   methods: {
@@ -213,6 +208,7 @@ export default {
       this.$router.push({ name: 'FileMahasiswa', params: { nim: mahasiswa.nim } });
     },
     async confirmDelete(mahasiswa) {
+      const toast = useToast();
       if (confirm("Apakah Anda yakin ingin menghapus data mahasiswa ini?")) {
         try {
           await axios.delete(`https://express-mysql-virid.vercel.app/api/pendaftaran/${mahasiswa.nim}`, {
@@ -224,9 +220,9 @@ export default {
           if (index !== -1) {
             this.mahasiswaList.splice(index, 1);
           }
-          this.successMessage = 'Data mahasiswa berhasil dihapus';
+          toast.success('Data mahasiswa berhasil dihapus');
         } catch (error) {
-          this.errorMessage = 'Terjadi kesalahan saat menghapus data mahasiswa';
+          toast.error('Terjadi kesalahan saat menghapus data mahasiswa');
           console.error('Error deleting data:', error);
         }
       } else {
@@ -248,10 +244,9 @@ export default {
       this.inputCalonPembimbing2 = '';
       this.inputKategoriTA = '';
       this.inputJenisTA = '';
-      this.successMessage = '';
-      this.errorMessage = '';
     },
     async tambahData() {
+      const toast = useToast();
       try {
         const NIM = this.selectedMahasiswa;
         const data = {
@@ -272,11 +267,11 @@ export default {
           }
         });
 
-        this.successMessage = 'Data mahasiswa berhasil ditambahkan';
+        toast.success('Data mahasiswa berhasil ditambahkan');
         this.closeModal();
         this.fetchData();
       } catch (error) {
-        this.errorMessage = 'Terjadi kesalahan saat menambahkan data mahasiswa';
+        toast.error('Terjadi kesalahan saat menambahkan data mahasiswa');
         console.error('Error adding data:', error);
       }
     },
@@ -291,6 +286,7 @@ export default {
   }
 };
 </script>
+
 
 <style scoped>
 /* Global styles */
@@ -355,7 +351,7 @@ table tbody tr td:last-child {
 .tombol-detail {
   background-color: #2196F3;
   color: white;
-  margin-right: 5px;
+  margin-right: 2px;
 }
 
 .tombol-delete {
@@ -481,7 +477,6 @@ table tbody tr td:last-child {
   margin-top: 10px;
 }
 
-/* Media query for mobile view */
 @media (max-width: 768px) {
   .mahasiswa-table {
     display: none;
@@ -489,6 +484,16 @@ table tbody tr td:last-child {
 
   .card-container {
     display: block;
+  }
+
+  .card .aksi-buttons {
+    display: flex;
+    justify-content: space-between; /* Menyesuaikan agar tombol berada di samping kanan kiri */
+    margin-top: 10px;
+  }
+
+  .card .aksi-buttons button {
+    flex: 1; /* Memastikan tombol menggunakan ruang yang sama */
   }
 }
 </style>

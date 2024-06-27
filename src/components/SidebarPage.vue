@@ -4,11 +4,13 @@
       <i :class="isSidebarVisible ? 'pi pi-times' : 'pi pi-bars'"></i>
     </div>
     <nav class="sidebar" :class="{ 'show': isSidebarVisible }">
-      <div class="header">
-        <img src="@/assets/images/logouin.png" alt="SIPTATIF Logo" class="siptatif-logo" />
+      <div class="header" :class="{ 'active-header': currentRoute === '/home' }">
+        <div class="logo-wrapper">
+          <img src="@/assets/images/logouin.png" alt="SIPTATIF Logo" class="siptatif-logo" />
+        </div>
         <div class="text">SIPTATIF</div>
       </div>
-      <br>
+      
       <ul>
         <li @click="handleMainMenuItemClick('/home')" :class="{ 'active': currentRoute === '/home' && activeDropdown !== 'dosen' }">
           <div class="menu-item">
@@ -22,27 +24,27 @@
             <router-link to="/mahasiswa">Mahasiswa</router-link>
           </div>
         </li>
-        <li @click.stop="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/' }">
+        <li @click="handleDosenDropdownClick" :class="{ 'active': currentRoute === '/' }">
           <div class="menu-item" @click="toggleDropdown('dosen')">
             <i class='bx bxs-user-rectangle'></i>
             <a>Dosen</a>
           </div>
           <ul class="feat-show" v-if="activeDropdown === 'dosen'">
-            <li @click.stop="handleDosenDropdownClick('/dosen')" :class="{ 'active': currentRoute === '/dosen' }">
+            <li @click="handleDosenDropdownClick('/dosen')" :class="{ 'active': currentRoute === '/dosen' }">
               <div class="menu-item">
                 <i class='bx bxs-user-detail'></i>
                 <router-link to="/dosen">Semua Dosen</router-link>
               </div>
             </li>
-            <li @click.stop="handleDosenDropdownClick('/dosen-pembimbing')" :class="{ 'active': currentRoute === '/dosen-pembimbing' }">
+            <li @click="handleDosenDropdownClick('/dosen-pembimbing')" :class="{ 'active': currentRoute === '/dosen-pembimbing' }">
               <div class="menu-item">
                 <i class='bx bx-user-check'></i>
                 <router-link to="/dosen-pembimbing">Pembimbing</router-link>
               </div>
             </li>
-            <li @click.stop="handleDosenDropdownClick('/dosen-penguji')" :class="{ 'active': currentRoute === '/dosen-penguji' }">
+            <li @click="handleDosenDropdownClick('/dosen-penguji')" :class="{ 'active': currentRoute === '/dosen-penguji' }">
               <div class="menu-item">
-                <i class='bx bx-user-voice' ></i>
+                <i class='bx bx-user-voice'></i>
                 <router-link to="/dosen-penguji">Penguji</router-link>
               </div>
             </li>
@@ -82,8 +84,8 @@ export default {
       this.activeDropdown = null;
       this.$router.push(route);
     },
-    handleDosenDropdownClick() {
-      // Do nothing here, so the dropdown only closes when another main menu item is clicked
+    handleDosenDropdownClick(route) {
+      this.$router.push(route);
     },
   }
 };
@@ -114,10 +116,14 @@ body {
   justify-content: center;
 }
 
+.logo-wrapper {
+  background-color: transparent;
+  padding: 10px; /* Tambahkan padding jika diperlukan */
+}
+
 .siptatif-logo {
-  height: 50px;
-  margin-right: 10px;
-  margin-top: 20px;
+  margin-left: -40px;
+  height: 46.5px;
 }
 
 .btn {
@@ -134,7 +140,7 @@ body {
 }
 
 .btn.click {
-  left: 230px; /*Tombol X */
+  left: 230px; /* Tombol X */
 }
 
 .btn span {
@@ -154,8 +160,8 @@ body {
   left: -200px;
   background: #0A2244;
   transition: left 0.4s ease;
-  z-index: 100; /* Adjusted z-index for sidebar */
-  margin-top: -80px; /*tulisan siptatif*/
+  z-index: 100;
+  margin-top: -80px;
 }
 
 .show {
@@ -166,10 +172,6 @@ body {
   color: white;
   font-size: 25px;
   font-weight: 600;
-  line-height: 65px;
-  text-align: center;
-  letter-spacing: 1px;
-  margin-top: 30px;
 }
 
 nav ul {
@@ -201,19 +203,35 @@ nav ul li a {
 }
 
 nav ul li.active a {
-  color: #ffffff;
-  border-left-color: #ffffff;
+  color: #000000; /* Ubah warna teks menjadi hitam */
+  background-color: #ffffff; /* Ubah warna latar belakang menjadi putih */
+}
+
+nav ul li.active .logo-wrapper {
+  background-color: #ffffff; /* Ubah latar belakang logo menjadi putih */
+}
+
+nav ul li.active .siptatif-logo {
+  filter: invert(1); /* Mengubah warna logo menjadi hitam jika logo aslinya berwarna putih */
 }
 
 nav ul li.active-dropdown a {
   color: #dbd8d1;
-  border-left-color: #ffffff;
+}
+
+nav ul li.active .menu-item {
+  background-color: #ffffff; /* Mengubah latar belakang menu item menjadi putih */
+  color: #000000; /* Mengubah warna teks ikon menjadi hitam */
+}
+
+nav ul li.active .menu-item i {
+  color: #000000; /* Mengubah warna ikon menjadi hitam */
 }
 
 .menu-item {
   display: flex;
   align-items: center;
-  cursor: pointer; /* untuk tampilan cursor tangan */
+  cursor: pointer; /* Untuk tampilan cursor tangan */
   color: rgb(255, 255, 255);
 }
 
@@ -233,7 +251,7 @@ nav ul li i {
 
 nav ul li.active i,
 nav ul li.active a {
-  color: rgb(244, 244, 244);
+  color: rgb(0, 0, 0); /* Ubah warna teks ikon menjadi hitam */
 }
 
 nav ul li.active-dropdown i,
@@ -242,10 +260,11 @@ nav ul li.active-dropdown a {
 }
 
 @media (max-width: 768px) {
+
+
   .sidebar {
     width: 70px;
     left: -70px;
-    
   }
 
   .sidebar.show {
@@ -253,9 +272,10 @@ nav ul li.active-dropdown a {
   }
 
   .siptatif-logo {
-    height: 50px;
-    margin-right: 10px;
-    margin-top: 20px;
+    height: 46.5px;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
   }
 
   .header .text,
@@ -270,12 +290,12 @@ nav ul li.active-dropdown a {
 
   .menu-item i {
     margin-right: 20px; /* Add margin to the right of the icons */
-  margin-left: 20px; ;
+    margin-left: 20px;
   }
 
   .dropdown-item {
     padding-left: 5px; /* Adjust padding for dropdown items */
-  font-size: 15px; /* Adjust font size for dropdown items */
+    font-size: 15px; /* Adjust font size for dropdown items */
   }
 
   .btn {
