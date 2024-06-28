@@ -283,7 +283,6 @@ table tbody tr td:last-child {
 
 .btttn {
   padding: 8px 12px;
-  margin-right: 10px;
   cursor: pointer;
   border: none;
   border-radius: 4px;
@@ -427,6 +426,7 @@ table tbody tr td:last-child {
 .tombol-edit {
   background-color: #FFC107;
   color: white;
+  margin-right: 2px;
 }
 
 .tombol-delete {
