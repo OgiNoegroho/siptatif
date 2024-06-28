@@ -34,7 +34,7 @@
 
     <!-- Button to open modal -->
     <button class="btttn tambah-button" @click="openModal">
-      <i class="pi pi-plus-circle icon"></i> Tambah Data Dosen
+      <i class="pi pi-plus-circle"></i> Tambah Data Dosen
     </button>
 
     <!-- Table to display dosen -->

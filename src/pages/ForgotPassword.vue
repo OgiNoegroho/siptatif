@@ -4,15 +4,20 @@
       <h1>Lupa Password</h1>
       <h5>Anda Lupa dengan Password Anda?</h5>
       <input type="email" v-model="email" class="input-field" placeholder="Masukkan Email">
-      <button @click="sendRecoveryLink" class="button">Kirimkan Link Pemulihan</button>
-      <p><router-link to="/" class="back-to-login-link">Login Kembali</router-link></p>
+      <div class="button-container">
+        <button @click="sendRecoveryLink" class="button">Kirimkan Link Pemulihan</button>
+        <router-link to="/" class="button back-to-login-link">Login Kembali</router-link>
+      </div>
       <p v-if="message" :class="messageClass">{{ message }}</p>
     </div>
     
     <div v-else class="reset-password-container">
       <h1>Reset Password</h1>
       <input type="password" v-model="newPassword" class="input-field" placeholder="Masukkan Password Baru">
-      <button @click="resetPassword" class="button">Reset Password</button>
+      <div class="button-container">
+        <button @click="resetPassword" class="button">Reset Password</button>
+        <router-link to="/" class="button back-to-login-link">Login Kembali</router-link>
+      </div>
       <p v-if="message" :class="messageClass">{{ message }}</p>
     </div>
   </div>
@@ -145,6 +150,13 @@ body {
   margin-bottom: 10px;
 }
 
+.button-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
 .button {
   display: block;
   width: 100%;
@@ -159,11 +171,14 @@ body {
 
 .back-to-login-link {
   display: block;
-  width: 100%;
-  padding: 10px;
+  width: 93%;
+  padding: 9px;
+  background-color: #0A2244;
+  color: #fff;
   text-align: center;
   text-decoration: none;
-  color: #0A2244;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
 .success-message {

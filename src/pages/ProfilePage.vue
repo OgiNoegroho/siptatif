@@ -1,12 +1,13 @@
 <template>
   <div class="profile-container">
     <div v-if="profile" class="profile-content">
-      <div class="profile-header">
-        <h2>User Profile</h2>
-        <img :src="profilePicture" alt="Profile Picture" class="profile-pic" />
-      </div>
-
       <div class="profile-details">
+        <div class="profile-header">
+          <h2>User Profile</h2>
+        </div>
+        <div class="profile-pic-container">
+          <img :src="profilePicture" alt="Profile Picture" class="profile-pic" />
+        </div>
         <div><label>Nama:</label><span>{{ profile.name }}</span></div>
         <div><label>NIP:</label><span>{{ profile.nip }}</span></div>
         <div><label>Tempat Lahir:</label><span>{{ profile.birthplace }}</span></div>
@@ -14,10 +15,9 @@
         <div><label>Umur:</label><span>{{ profile.age }}</span></div>
         <div><label>Alamat:</label><span>{{ profile.address }}</span></div>
         <div><label>Jenis Kelamin:</label><span>{{ translatedGender }}</span></div>
-      </div>
-
-      <div class="button-container">
-        <button class="edit-button" @click="enterEditMode">Edit Profile</button>
+        <div class="button-container">
+          <button class="edit-button" @click="enterEditMode">Edit Profile</button>
+        </div>
       </div>
     </div>
     <div v-else>
@@ -197,13 +197,18 @@ export default {
 
 .profile-header {
   text-align: center;
+  margin-left: 130px;
+}
+
+.profile-pic-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
 }
 
 .profile-pic {
-  position: relative;
-  align-items: center;
-  margin-bottom: 20px;
   width: 150px;
+  margin-left: 120px;
   height: 150px;
   border-radius: 50%;
   overflow: hidden;
@@ -211,32 +216,33 @@ export default {
 }
 
 .profile-details {
-  border: 1px solid #ccc; /* Menetapkan border dengan ketebalan 1px */
+  border: 1px solid #ccc;
   padding: 10px;
   border-radius: 8px;
-  width: 100%; /* Menetapkan lebar profile detail */
-  margin: auto; /* Mengatur agar profile detail berada di tengah */
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Menambahkan shadow */
-  background-color: #ffffff; /* Memberi warna latar belakang untuk efek emboss */
-  text-align: left; /* Atur teks menjadi rata kiri */
+  width: 100%;
+  margin: auto;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  text-align: left;
+  position: relative; /* Add position relative */
 }
 
 .profile-details div {
-  display: flex; /* Menggunakan flexbox untuk mengatur posisi label dan nilai */
+  display: flex;
   align-items: center;
-  justify-content: space-between; /* Memastikan label dan nilai sejajar rata kanan */
+  justify-content: space-between;
   margin-bottom: 10px;
 }
 
 .profile-details label {
   font-weight: bold;
-  display: inline-block; /* Membuat label dan nilai sejajar */
-  width: 120px; 
+  display: inline-block;
+  width: 120px;
 }
 
 .profile-details input,
 .profile-details select {
-  flex: 1; /* Membuat input dan select memenuhi ruang yang tersedia */
+  flex: 1;
   margin-left: 10px;
 }
 
@@ -271,6 +277,7 @@ export default {
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
+  margin-left: 145px;
 }
 
 .edit-button:disabled {
@@ -307,20 +314,20 @@ export default {
 }
 
 .modal-details {
-  display: flex; /* Use flex to align items */
-  align-items: center; /* Center vertically */
-  margin-bottom: 10px; /* Space between rows */
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
 }
 
 .modal-details label {
   font-weight: bold;
-  flex: 0 0 100px; /* Set a fixed width for labels */
-  text-align: left; /* Left align label text */
+  flex: 0 0 100px;
+  text-align: left;
 }
 
 .modal-details input,
 .modal-details select {
-  flex: 1; /* Inputs take up the remaining space */
+  flex: 1;
 }
 
 .button-container.centered {
@@ -355,12 +362,29 @@ export default {
 
 @media (max-width: 600px) {
   .profile-pic {
-    width: 120px; /* Mengurangi ukuran gambar profil di perangkat mobile */
-    height: 120px; /* Mengurangi ukuran gambar profil di perangkat mobile */
+    margin-left: 110px;
+    height: 120px;
   }
 
   .profile-details {
-    width: 100%; /* Kontainer detail profil mengisi lebar layar penuh */
+    margin-top: 30px;
+    width: 90%;
   }
+
+  .profile-header {
+  text-align: center;
+  margin-left: 110px;
+}
+
+.edit-button {
+  background-color: #240750;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-left: 140px;
+}
+
 }
 </style>

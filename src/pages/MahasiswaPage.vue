@@ -67,7 +67,7 @@
 
     <!-- Button to open modal -->
     <button class="btttn tambah-button" @click="openModal">
-      <i class="pi pi-plus-circle icon"></i> Data Mahasiswa
+      <i class="pi pi-plus-circle"></i> Data Mahasiswa
     </button>
 
     <table class="mahasiswa-table">

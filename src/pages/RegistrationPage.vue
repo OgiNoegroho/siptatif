@@ -53,8 +53,8 @@
         </div>
       
         <div class="button-container">
-          <span class="login-link" @click="redirectToLogin">Kembali ke login page</span>
           <button type="submit" class="register-button">Register</button>
+          <button type="button" class="login-button" @click="redirectToLogin">Kembali ke login page</button>
         </div>
       </form>
       <p ref="registerMessage" v-if="registerMessage" :class="registerMessage.includes('error') ? 'error-message' : 'success-message'">
@@ -264,7 +264,7 @@ input[type="text"] {
 
 .button-container {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
   font-weight: bold;
 }
@@ -272,17 +272,18 @@ input[type="text"] {
 button.register-button {
   width: auto; 
   padding: 10px 100px; 
-  margin-left: 20px; /* Added margin-right to space out the buttons */
+  margin-top: 8px;
 }
 
-.login-link {
-  margin-left: 10px;
+button.login-button {
+  width: auto; 
   margin-top: 12px;
-  font-size: 16px; /* Same size as the register button */
-  color: #0A2244;
-  text-decoration: underline;
-  cursor: pointer;
-  align-self: center; /* Center align with button */
+  padding: 8px 50px; 
+  background-color: #0A2244;
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  cursor:pointer;
 }
 
 button {
