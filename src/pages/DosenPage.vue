@@ -34,7 +34,7 @@
 
     <!-- Button to open modal -->
     <button class="btttn tambah-button" @click="openModal">
-      <i class='bx bx-plus-circle'></i> Tambah Data Dosen
+      Tambah Data Dosen
     </button>
 
     <!-- Table to display dosen -->
